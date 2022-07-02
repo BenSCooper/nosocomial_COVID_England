@@ -6,15 +6,13 @@ vax.data<-read.csv(file = "vacc_cov_by_region.csv",  na.strings = "*")
 # So column 1 has region code and col headings for cols 2... give data, and the cell entries show proportion of sampled
 # hcws vaccinated 
 
-# steps to process are to transorm so there are three columns: region (using same codes as sitrep weekly, date, and vax coverage)
+# steps to process are to transform so there are three columns: region (using same codes as sitrep weekly, date, and vax coverage)
 
-# note that "EM" and "WM" and "YH" have no obvious matches to sitrep region names
-# but now confirmed (by Yalda) that EM and WM are west midlands and east midlands (so can take a average to get Midlands)
-# but what is YH?
+# note that EM and WM are west midlands and east midlands (so can take a average to get Midlands)
 #YH is Yorkshire and the Humber which is combined with NE to create North East and Yorkshire in the sitrep.
-
+  
 # so create new rows in vax.data for NEY (North East and Yorkshire) and M (Midlands)
-# take as averages of component sub-regions (currently lacking information needed to take weighted averages)
+# taken as averages of component sub-regions (currently lacking information needed to take weighted averages)
 
 
 # do this using reshape

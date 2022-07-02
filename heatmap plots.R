@@ -1,5 +1,5 @@
 #  heatmap plots
-#  test version 
+ 
 # where we use Iprimed_C  to make decision about lockdown
 # start lockdown is Iprimed_C is above 1000, and stop it if is below 10
 
@@ -25,9 +25,6 @@ library(gridExtra)
 # pi_H is the proportion of hospitalised infected patients who progress to severe infection, Iprimed (where definition of severe is that hospitalisation would be recommended)
 # pi_C is the proportion of infected patients in the community who progress to severe infection, Iprimed
 # in general components of next generation matrix will be time varying
-
-#R_HH<-   0.5   # R_HH= beta_HH/mean.infectious.period etc
-
 
 
 days = 450 # how many days to simulate
@@ -68,14 +65,6 @@ ystart0<-c(
   CumNosoInfections=0,
   CumDetectedNosoInfections=0,
   CumCOVIDAdmissions=0,
-  # new_inf_at_time_t0 = 0,
-  # new_inf_at_time_t1 = 0,
-  # new_inf_at_time_t2 = 0,
-  # new_inf_at_time_t3 = 0,
-  # new_inf_at_time_t4 = 0,
-  # new_inf_at_time_t5 = 0,
-  # new_inf_at_time_t6 = 0,
-  # seven_day_cases = 0,
   lockdown=0,
   numlockdowns=0
 )
@@ -148,21 +137,10 @@ parameters0<-c(
 
 ## generate potential values and remove any where trigger for ending is greater than trigger for starting
 
-#cr_start_sens <- c(seq(70, 190, by = 30)/500000)
-#ld_start_trigger <- c(seq(11, 20, by = 1))
-#ld_end_trigger <- c(seq(1,0, by = 1))
-
 ld_start_trigger <- c(seq(10, 25, by = 0.5))
 ld_end_trigger <- c(seq(0.5,5, by = 0.25))
 
 
-#cr_start_sens <- c(seq(150, 1000, by = 50)/500000)
-# * cr_start_sens <- c(seq(110, 1010, by = 100)/500000)
-
-# * cr_end_sens <- c(seq(10,100, by = 10)/500000)
-
-
-# trans_mult = c(0:5)
 # trans_mult = c(1,0.5,0.25 )   # multiplier for hospital transmission rates (corresponds to hosp_scaling for high, medium and low hospital transmission)
 trans_mult = c(1,0.75,0.5 )   # multiplier for hospital transmission rates (corresponds to hosp_scaling for high, medium and low hospital transmission)
 
@@ -289,22 +267,6 @@ HospCovid <- function(t, x, parms) {
       if(numlockdowns==0) phi<-1 else phi<-phi_nonld
     }
     
-    # old_phi = phi
-    # if(seven_day_cases >= case_rate_lockdown_start*(S_C + E1_C + E2_C + I1_C + I2_C + Iprimed_C + R_C)){
-    #   phi<-phi_ld
-    # }
-    # else if(seven_day_cases <= case_rate_lockdown_end*(S_C + E1_C + E2_C + I1_C + I2_C + Iprimed_C + R_C)  ) {
-    #   phi<-phi_nonld
-    # }
-    # 
-    
-    #   else if(seven_day_cases >= lockdown_trigger3*(S_C + E1_C + E2_C + I1_C + I2_C + Iprimed_C + R_C) & seven_day_prev >=lockdown_trigger3*(S_C + E1_C + E2_C + I1_C + I2_C + Iprimed_C + R_C)) {
-    #      phi<-phi_ld3
-    #    }
-    #    else {
-    #      phi<-1
-    #    }
-    
     # Derivatives 
     # a) For hospitalised population 
     dS_H <- -beta_HH*S_H*(I1_H + I2_H)/N_H   - betaprimed_HH*S_H*Iprimed_H/N_H  -beta_HCWH*S_H*(I1_HCW)/N_H  - mu * S_H + alpha * S_C 
@@ -338,18 +300,6 @@ HospCovid <- function(t, x, parms) {
     dCumCOVIDAdmissions <- limited.alphaprimed*Iprimed_C
     lockdown<-0        # note that this is the rate of change of lockdowns not the value of lockdowns
     numlockdowns<-0    # note that this is the rate of change of numlockdowns not the number of numlockdowns
-    # new_inf_at_time_t6 =  new_inf_at_time_t5 - new_inf_at_time_t6 
-    # new_inf_at_time_t5 =  new_inf_at_time_t4 - new_inf_at_time_t5
-    # new_inf_at_time_t4 =  new_inf_at_time_t3 - new_inf_at_time_t4
-    # new_inf_at_time_t3 =  new_inf_at_time_t2 - new_inf_at_time_t3
-    # new_inf_at_time_t2 =  new_inf_at_time_t1 - new_inf_at_time_t2
-    # new_inf_at_time_t1 =  new_inf_at_time_t0 - new_inf_at_time_t1
-    # new_inf_at_time_t0 = gamma2*E2_C - new_inf_at_time_t0
-    
-    # phi = phi - old_phi
-    # Return values 
-    #    list(c(dS_H, dE1_H, dE2_H, dI1_H, dI2_H, dIprimed_H, dR_H,dS_HCW, dE1_HCW, dE2_HCW, dI1_HCW, dI2_HCW, dIprimed_HCW, dR_HCW, dS_C, dE1_C, dE2_C, dI1_C, dI2_C, dIprimed_C, dR_C, 
-    #     dCumNosoInfections,dCumDetectedNosoInfections,dCumCOVIDAdmissions, new_inf_at_time_t0, new_inf_at_time_t1, new_inf_at_time_t2, new_inf_at_time_t3, new_inf_at_time_t4, new_inf_at_time_t5, new_inf_at_time_t6, seven_day_cases, lockdown,numlockdowns))
     list(c(dS_H, dE1_H, dE2_H, dI1_H, dI2_H, dIprimed_H, dR_H,dS_HCW, dE1_HCW, dE2_HCW, dI1_HCW, dI2_HCW, dIprimed_HCW, dR_HCW, dS_C, dE1_C, dE2_C, dI1_C, dI2_C, dIprimed_C, dR_C, 
                dCumNosoInfections,dCumDetectedNosoInfections,dCumCOVIDAdmissions, lockdown,numlockdowns))
            
@@ -442,18 +392,11 @@ cr_comb$Paramset = 1:nrow(cr_comb)
 colnames(cr_comb) = c("LD_start", "LD_end", "trans_mult", "Paramset")
 
 all_res = left_join(all_res, cr_comb)
-#all_res$Lockdown = FALSE
-#all_res$Lockdown[all_res$phi < 0.4] = TRUE
 
 
 # aggregate data 
 dat_for_heatmap = all_res %>% group_by(start = LD_start, end = LD_end, trans_mult) %>% summarise(total_ld_length = length(which(lockdown == 1)), num_lds=max(numlockdowns),  total_inf = max(R_C))
 
-# plot LD length against start cut-off for different values of "trans_mult" (nosocomial transmission prob multiplier)
-#ggplot(dat_for_heatmap[dat_for_heatmap$end =="7",]) + geom_line(size = 1, aes(x = start, y = total_ld_length, group = trans_mult, colour = factor(trans_mult))) + theme_bw()
-
-# plot LD length against against end cut-off for different values of "trans_mult" (nosocomial transmission prob multiplier)
-#ggplot(dat_for_heatmap[dat_for_heatmap$start =="130",]) + geom_line(size = 1, aes(x = end, y = total_ld_length, group = trans_mult, colour = factor(trans_mult))) + theme_bw()
 
 dat_for_heatmap$trans_mult2 <-factor(dat_for_heatmap$trans_mult, levels=c(1.0,0.75,0.5),labels=c("High hospital transmission","Intermediate hospital transmission","Low hospital transmission"))
 all_res$trans_mult2 <-factor(all_res$trans_mult, levels=c(1.0,0.75,0.5),labels=c("High hospital transmission","Intermediate hospital transmission","Low hospital transmission"))
@@ -505,7 +448,7 @@ P4<- ggplot(dat_for_heatmap) + geom_tile(aes(x = startx2, y = endx2, fill = f_nu
   theme(axis.title.y = element_text(size = rel(labelscaling), angle = 90)) +
   theme_ipsum() 
 
-
+P4
 P1
 P2
 P3

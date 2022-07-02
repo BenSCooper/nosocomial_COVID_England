@@ -50,7 +50,7 @@ library(readr)
 
 # i) read in data  filter to include only rows where the site type is labelled as a hospital
 
-ERIC_data <- read_csv("../fig2/ERIC_201920_SiteData_for_R.csv")
+ERIC_data <- read_csv("ERIC_201920_SiteData_for_R.csv")
 ERIC_data<-as.data.frame(ERIC_data)
 # Restrict to records where Site Type is  a hospital and where Trust Type is either ACUTE or COMMUNITY 
 site.col<-match("Site Type", names(ERIC_data))
@@ -99,7 +99,7 @@ volume.by.trust<- tapply(ERIC_data$`Site heated volume (m³)`, ERIC_data[,1], su
 
 # now read in general and acute beds by trust, and divide by this and standardize
 library(readxl)
-OccupiedBedsbyTrust <- as.data.frame(read_excel("../fig2/GeneralAcuteOccupiedBedsbyTrust.xlsx", 
+OccupiedBedsbyTrust <- as.data.frame(read_excel("GeneralAcuteOccupiedBedsbyTrust.xlsx", 
                                                 col_types = c("text", "text", "text", 
                                                               "text", "text", "numeric", "numeric", 
                                                               "numeric", "numeric")))
@@ -145,9 +145,7 @@ newtrustdata$percent_pre1965.std<-(newtrustdata$percent_pre1965-mean(newtrustdat
 newtrustdata$trustsize.std<-(newtrustdata$TotalBedsAvailable-mean(newtrustdata$TotalBedsAvailable))/sd(newtrustdata$TotalBedsAvailable)
 
 
-
 #  Now merge new fields into sitrep_weekly
-
 
 trust.index<-match(sitrep_weekly$org, newtrustdata$OrgCode)
 # 1. single room data 

@@ -5,7 +5,7 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
   
   # Returns a vector of length   (los-day_of_infection) which contains probabilities that a hospital acquired infection
   # that occurs on day_of_infection (counting from 1, where 1 is the first day of hospital stay)  is detected on each day of 
-  # stay. Elements of the vectored returned are labeled with the day of stay  (from day_of_infection+1  to los) and the values in the vector
+  # stay. Elements of the vector returned are labeled with the day of stay  (from day_of_infection+1  to los) and the values in the vector
   # elements are the calculated probabilities. These depend on the arguments
   # pcr_sens_vec  a vector where the ith element gives the sensitivity of a PCR test performed i days after the day of infection
   # inc_vec  a vector where the ith element gives the probability of an incubation period of i days (given symptomatic)
@@ -31,9 +31,9 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
   prob_newly_pos_given_neg<-rep(0, los-day_of_infection)
   names(prob_first_detected_on_day)<-(day_of_infection+1):los
   
-  # First code this with no screening
+  # First with no screening
   
-   if(prob_sympt!=0){ # i.e we are  screening patients as a result of symtpoms
+   if(prob_sympt!=0){ # i.e we are  screening patients as a result of symptoms
     
     # then calculate prob of symptoms on each day after infection & prob of testing
     # assume daily testing continues on each day following symptom onset
@@ -52,7 +52,6 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
        repeattestday<-i+1 #day for repeat testing expressed as a function of the number of days after day_of_infection
        number_repeat_tests_after_negative_PCR_performed<-0   
        prob_all_negscreens_so_far<- prob_symptom_onset_today*(1- prob_pcr_pos_if_tested_today)  # i.e. the prob of a negative screen if tested on day of symptom onset
-       #browser()
         while((repeattestday + day_of_infection <= los) & (number_repeat_tests_after_negative_PCR_performed< repeatPCRifsymptomaticandneg)){ 
          prob_first_detected_on_day[repeattestday]<- prob_first_detected_on_day[repeattestday] + prob_all_negscreens_so_far * pcr_sens_vec[repeattestday]
          prob_all_negscreens_so_far<-prob_all_negscreens_so_far*(1-pcr_sens_vec[repeattestday])
@@ -68,14 +67,13 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
     }
   }
   
-  # print("prob_newly_pos_given_neg")
-  #print(prob_newly_pos_given_neg)
+
   # so at this point prob_first_detected_on_day holds the probability that infection is *first* detected on the given day due
   # to screening as a result of symptomatic infection. 
   # if prob_sympt had been set to 0 when calling the function these probabilities will also be zero.
   
   if(sum(screening_days)!=0){ # i.e there is screening
-    #  browser()
+    #
     # First create 7 vectors of same length as prob_first_detected_on_day each 
     # with a 1 on days with screening and 0 on days without. 
     # The seven vectors correspond to the day of infection occurring on different days of the week
@@ -88,7 +86,7 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
       screening_policies[i,]<-screening_days
       screening_days<-c(screening_days[7],screening_days[1:6])
     }
-    # print(screening_policies)
+    # 
     # Now create a matrix to hold probability of testing positive on each day after infection for each of the seven screening protocols
     days_since_infection<-los-day_of_infection
     screening_on_day<-matrix(0,nrow=7, ncol=days_since_infection)
@@ -101,22 +99,21 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
     if(length(pcr_sens_vec)> days_since_infection) {
       padded_pcr_sens_vec<-pcr_sens_vec[1:days_since_infection]
     }
-    # print(padded_pcr_sens_vec)
+    
     for(j in 1:7){
       screening_on_day[j,] <- screening_policies[j,(0:(days_since_infection-1))%%7 +1 ] #ensures screening (yes/no) is defined for each day following infection
       prob_screening_pos_on_day[j,] <-   screening_on_day[j,] * padded_pcr_sens_vec 
       # note that prob_screening_pos_on_day above is not the prob screening positive for the first time, so these probabilities don't need to add to one
       # rather, it's the just the prob that a screen on given day is positive, or a 0 if the policy says now screening on that day
     }  
-    # print(c("screening_on_day =", screening_on_day))
-    # print(c("prob_screening_pos_on_day= ", prob_screening_pos_on_day))
+
     # Now, for each of these seven policies calculate the probability of first screening positive on each day 
     # taking account of the previously calculated probabilities of first screening positive as a result of tests done as a result of 
     # symptomatic infection, which are stored in prob_first_detected_on_day  
     prob_first_screening_pos_on_day<-matrix(0,nrow=7, ncol=days_since_infection) 
 
     for(j in 1:7){
-      # browser()
+   
       prob_not_pos_so_far<-1
       prob_first_screening_pos_on_day[j,1]<-prob_newly_pos_given_neg[1] + (1-prob_newly_pos_given_neg[1])* prob_screening_pos_on_day[j,1]
       if(days_since_infection>1){
@@ -127,15 +124,13 @@ CalcProbPosByDay<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_sy
       }  
     }  
     # browser()
-    prob_first_screening_pos_on_day<-apply(prob_first_screening_pos_on_day,2,mean) # i.e. average over the seven results aboves
+    prob_first_screening_pos_on_day<-apply(prob_first_screening_pos_on_day,2,mean) # i.e. average over the seven results above
     names(prob_first_screening_pos_on_day)<-(day_of_infection+1):los
-     # print(screening_on_day)
-    # print(screening_policies)
-    # print(screening_days)
+
   } else { # no screening
     prob_first_screening_pos_on_day<-prob_first_detected_on_day
   }
-  # return(prob_first_detected_on_day)  
+ 
   return(prob_first_screening_pos_on_day)
 }
   
@@ -186,7 +181,7 @@ CalcProbPosByDay2<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_s
       repeattestday<-i+1 #day for repeat testing expressed as a function of the number of days after day_of_infection
       number_repeat_tests_after_negative_PCR_performed<-0   
       prob_all_negscreens_so_far<- prob_symptom_onset_today*(1- prob_pcr_pos_if_tested_today)  # i.e. the prob of a negative screen if tested on day of symptom onset
-      #browser()
+     
       while((repeattestday + day_of_infection <= los) & (number_repeat_tests_after_negative_PCR_performed< repeatPCRifsymptomaticandneg)){ 
         prob_first_detected_on_day[repeattestday]<- prob_first_detected_on_day[repeattestday] + prob_all_negscreens_so_far * pcr_sens_vec[repeattestday]
         prob_all_negscreens_so_far<-prob_all_negscreens_so_far*(1-pcr_sens_vec[repeattestday])
@@ -202,29 +197,18 @@ CalcProbPosByDay2<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_s
     }
   }
   
-  # print("prob_newly_pos_given_neg")
-  #print(prob_newly_pos_given_neg)
+
   # so at this point prob_first_detected_on_day holds the probability that infection is *first* detected on the given day due
   # to screening as a result of symptomatic infection. 
   # if prob_sympt had been set to 0 when calling the function these probabilities will also be zero.
   
   if(sum(screening_days)!=0){ # i.e there is screening
-    #  browser()
+  
     # First create 7 vectors of same length as prob_first_detected_on_day each 
     # with a 1 on days with screening and 0 on days without. 
     # The seven vectors correspond to the day of infection occurring on different days of the week
     # Then for each create a vector of prob of being first detected by each day accounting for screening asymptomatics and symptomatics
     # 
-    # Then average this vector to obtain  detection probs for each day.
-    # *** code below was used for weekly repeating screening patterns, but in this we assume screening is on fixed days from admission and does not repeat
-    #  if(length(screening_days)!=7)  stop("screening days should be a vector with 7 elements, 0 for days with no screening, 1 for days with screening")
-    #    screening_policies<-matrix(NA,nrow=7, ncol=7)  #  one row per policy, seven rows to account for infections on different days of the week
-    # for(i in 1:7){
-    #   screening_policies[i,]<-screening_days
-    #   screening_days<-c(screening_days[7],screening_days[1:6])
-    # }
-    # print(screening_policies)
-    # ***    
     # Now create a matrix to hold probability of testing positive on each day after infection for each of the seven screening protocols
     days_since_infection<-los-day_of_infection
     #   screening_on_day<-matrix(0,nrow=7, ncol=days_since_infection)
@@ -248,20 +232,10 @@ CalcProbPosByDay2<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_s
       screening_days<-screening_days[1:los]
     }
     
-    #  print(c("screening days are ",screening_days))
     screening_on_day<-screening_days[(day_of_infection+1):los]
     
-    # print(padded_pcr_sens_vec)
     prob_screening_pos_on_day<-screening_on_day*padded_pcr_sens_vec
     
-    #   print(c("prob_screening_pos_on_day  ",prob_screening_pos_on_day))
-    
-    #   screening_on_day[j] <- screening_policies[j,(0:(days_since_infection-1))%%7 +1 ] #ensures screening (yes/no) is defined for each day following infection
-    # note that prob_screening_pos_on_day above is not the prob screening positive for the first time, so these probabilities don't need to add to one
-    # rather, it's the just the prob that a screen on given day is positive, or a 0 if the policy says now screening on that day
-    
-    # print(c("screening_on_day =", screening_on_day))
-    # print(c("prob_screening_pos_on_day= ", prob_screening_pos_on_day))
     # Now, for each of these seven policies calculate the probability of first screening positive on each day 
     # taking account of the previously calculated probabilities of first screening positive as a result of tests done as a result of 
     # symptomatic infection, which are stored in prob_first_detected_on_day  
@@ -275,11 +249,9 @@ CalcProbPosByDay2<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_s
       }
     }  
     
-    # browser()
+
     names(prob_first_screening_pos_on_day)<-(day_of_infection+1):los
-    # print(screening_on_day)
-    # print(screening_policies)
-    # print(screening_days)
+
   } else { # no screening
     prob_first_screening_pos_on_day<-prob_first_detected_on_day
   }
@@ -290,7 +262,7 @@ CalcProbPosByDay2<-function(los, day_of_infection, pcr_sens_vec, inc_vec, prob_s
 
 CalcProbDetectedOnDay<-function(los_dist,  pcr_sens_vec, inc_vec, prob_sympt,screening_days=c(0,0,0,0,0,0,0), repeatPCRifsymptomaticandneg=3,wklyscreeningpattern=T){
   #returns a vector of same length as los_dist which holds the probability that one new infection
-  #(assumed to infected an in-patient at random on a given day) is detected on 1,2,3....days after hospital admission 
+  #(assumed to infect an in-patient at random on a given day) is detected on 1,2,3....days after hospital admission 
   #if  wklyscreeningpattern is TRUE screening_days is taken a pattern that repeats every seven days
   #assumed to take place on fixed days of the week (rather than at certain times after admission)
   #if  wklyscreeningpattern is FALSE screening_days is taken as a non-repeating pattern with no screening after the last date given
@@ -304,13 +276,13 @@ CalcProbDetectedOnDay<-function(los_dist,  pcr_sens_vec, inc_vec, prob_sympt,scr
     
     prob.detect.by.day.given.los<-rep(0,max.los)
     for(j in 1:(i-1)){ # j  is day.of.infection
-    if(wklyscreeningpattern){
-      prob.detection<-CalcProbPosByDay(los=i, day_of_infection = j, pcr_sens_vec = pcr_sens_vec, inc_vec=inc_vec, prob_sympt=prob_sympt, screening_days=screening_days, repeatPCRifsymptomaticandneg=repeatPCRifsymptomaticandneg) 
-    } else {
-      prob.detection<-CalcProbPosByDay2(los=i, day_of_infection = j, pcr_sens_vec = pcr_sens_vec, inc_vec=inc_vec, prob_sympt=prob_sympt, screening_days=screening_days, repeatPCRifsymptomaticandneg=repeatPCRifsymptomaticandneg) 
-    }
-    detection.days<-as.numeric(names(prob.detection))
-    prob.detect.by.day.given.los[detection.days]<-prob.detect.by.day.given.los[detection.days]+prob.detection
+      if(wklyscreeningpattern){
+        prob.detection<-CalcProbPosByDay(los=i, day_of_infection = j, pcr_sens_vec = pcr_sens_vec, inc_vec=inc_vec, prob_sympt=prob_sympt, screening_days=screening_days, repeatPCRifsymptomaticandneg=repeatPCRifsymptomaticandneg) 
+      } else {
+        prob.detection<-CalcProbPosByDay2(los=i, day_of_infection = j, pcr_sens_vec = pcr_sens_vec, inc_vec=inc_vec, prob_sympt=prob_sympt, screening_days=screening_days, repeatPCRifsymptomaticandneg=repeatPCRifsymptomaticandneg) 
+      }
+      detection.days<-as.numeric(names(prob.detection))
+      prob.detect.by.day.given.los[detection.days]<-prob.detect.by.day.given.los[detection.days]+prob.detection
     }
     prob.detect.by.day.given.los<-prob.detect.by.day.given.los/i #divide by i, as the i days of infection are assumed equally likely (i.e. patient equally likely to acquire infection on any day of stay)
     
@@ -318,7 +290,7 @@ CalcProbDetectedOnDay<-function(los_dist,  pcr_sens_vec, inc_vec, prob_sympt,scr
   }
   
   # Now to calculate overall probability of detection on each day of stay we take a weighted mean
-  # where the weights for each los (row) are the value of that los * the frequencof that los
+  # where the weights for each los (row) are the value of that los * the frequency of that los
   
   weights<-(1:max.los)*los_dist
   
@@ -349,15 +321,3 @@ binom.ntrial.pos<-function(x, p, ntrials.prior){
   return(posterior)
 }
 
-
-# # testing
-# pcr_sens_vec<-c(0.1,0.3,0.6,0.9, 0.95, 0.95, 0.95, 0.9, 0.9, 0.85, 0.85, 0.85, 0.8,  0.8, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2)  # just made up for now but can look up
-# pcr_sens_vec<-rep(0.5,30)
-# prob_sympt<-0.0
-# inc_vec<-c(0.05,0.15,0.2, 0.2,0.2,0.1,0.05,0.05,.01)
-# inc_vec<-inc_vec/sum(inc_vec)
-# 
-# test<-CalcProbPosByDay(100,15,pcr_sens_vec,inc_vec,prob_sympt,c(0,0,0,0,0,1,1) ,repeatPCRifsymptomaticandneg=3)
-# test<-CalcProbPosByDay(100,95,pcr_sens_vec,inc_vec,prob_sympt,c(1,0,0,0,0,0,0) ,repeatPCRifsymptomaticandneg=0)
-# print(test)
-# print(sum(test))

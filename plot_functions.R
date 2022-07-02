@@ -40,7 +40,6 @@ plot_obs_v_fitted_by_trust.hcw<-function(stanobject, standata, nrows=10, figtitl
   mtext(figtitle, side=3,outer=T,line=1.5)
 }
 
-
 plot_infection_detected_stacked_area<-function(standata,  figtitle="Detected infections ", figsubtitle="",wknums=42:55){
   require(hrbrthemes)
   require(viridis)

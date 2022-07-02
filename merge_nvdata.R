@@ -2,9 +2,9 @@
 
 
 # First create a function that randomises variables in nvdata where assign prop_variant data based on 
-# randomly permuted region variables and therefore assing prop_variant data to wrong regions 
+# randomly permuted region variables and therefore assign prop_variant data to wrong regions 
 # This is created so we can check that any association we find between prop_variant and transmissibility
-# is no just due to temporal confounding - i.e. we expect the association to disappear when we
+# is not just due to temporal confounding - i.e. we expect the association to disappear when we
 # randomly assigns nv data to the wrong regions (but with the same timing)
 
 permute_regions<-function(regions=nvdata$nhser_name){
