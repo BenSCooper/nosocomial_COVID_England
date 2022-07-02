@@ -1,4 +1,4 @@
-#  plots of unmitigated epidemcs for supp mat
+#  plots of unmitigated epidemics for supp mat
 
 
 source("covid ode hospital model unmitigated.R")
@@ -9,7 +9,6 @@ require(gridExtra)
 require(bayesplot)
 require(hrbrthemes)
 require(viridis)
-
 
 out.df$infH<- out.df$E1_H + out.df$E2_H + out.df$I1_H + out.df$I2_H #hospital acquired cases 
 out.df$infHCW<- out.df$E1_HCW + out.df$E2_HCW + out.df$I1_HCW + out.df$I2_HCW
