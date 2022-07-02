@@ -1,4 +1,3 @@
-# test new figure 2 with no overlapping dorling plot
 
 #  Figure 2
 
@@ -9,7 +8,7 @@
 # 1. Number of single rooms beds per trust as a percentage of general and acute beds. 
 # 2. Hospital crowding: % general and acute days occupied  
 # 3. Hospital building age score
-# 4.Size of hospital.   
+# 4. Size of hospital.   
 
 
 # 1. Number of single rooms beds per trust as a percentage of general and acute beds. 
@@ -18,17 +17,16 @@
 # BI "Single bedrooms for patients with en-suite facilities (No.)"
 # BJ "Single bedrooms for patients without en-suite facilities (No.)"
 # BK "Isolation rooms"
-# - done
+# 
 # Add up these and divide by number acute and general bed days available per trust for third quarter of 2020. 
 # This is column H "Beds-Open-Overnight-Web_File-Final-DE5WC.xlsx"
 # 
-# Standardize this variable. 
-# This is named (newtrustdata$proportion_single_rooms_std)
 
 library(readr)
-newtrustdata$volume_per_bed
-#source("../create_dfs/mergeERICdata.R")
-
+require(PostcodesioR)
+require(remotes)
+#remotes::install_github("garretrc/ggvoronoi", dependencies = TRUE, build_opts = c("--no-resave-data"))
+# ggvoronoi  can be installed from github as above
 
 # i) read in data  filter to include only rows where the site type is labelled as a hospital
 
@@ -45,7 +43,7 @@ acute_or_community_site<-acute_site|community_site
 ERIC_data<-ERIC_data[hosp_site & acute_site, ]
 include<-!(ERIC_data$`Trust Code` %in% c("RP4" , "RBS", "RCU","R0A90", "RRKE6"))
 ERIC_data<-ERIC_data[include,]
-# These excludes these childre-only hospitals   
+# These excludes these children-only hospitals   
 # "GREAT ORMOND STREET HOSPITAL FOR CHILDREN NHS FOUNDATION TRUST" 
 # "ALDER HEY CHILDREN'S NHS FOUNDATION TRUST" 
 # “SHEFFIELD CHILDREN'S NHS FOUNDATION TRUST"     
@@ -126,9 +124,13 @@ newtrustdata$trustsize.std<-(newtrustdata$TotalBedsAvailable-mean(newtrustdata$T
 
 # new get lat and long for trust from postcode
 
-require(PostcodesioR)
 sel<-match(newtrustdata$OrgCode,trustpostcode[,1])
 newtrustdata$postcode<-trustpostcode[sel,2]
+# note that in data supplied post-code for Sunderland Royal Hospital was incorrectly given as
+# "SR7 4TP". It should have been "SR4 7TP" Change by hand
+SRHnum<-match("SR7 4TP", newtrustdata$postcode)
+newtrustdata$postcode[SRHnum] <- "SR4 7TP"
+
 newtrustdata$longitude<-NA
 newtrustdata$latitude<-NA
 for(i in 1:length(newtrustdata$postcode)){
@@ -142,7 +144,7 @@ for(i in 1:length(newtrustdata$postcode)){
 # Merge into newtrustdata all the other columns to plot
 # A. cumulative day 15 cases 
 
-sitrep_time_series <- readRDS("../fig1/sitreps_eng_expanded.rds")
+sitrep_time_series <- readRDS("sitreps_eng_expanded.rds")
 day15totals<-tapply(sitrep_time_series$n_inpatients_diagnosed_15_,sitrep_time_series$org_code,sum,na.rm=T)
 pos<-match(newtrustdata$OrgCode, names(day15totals))
 newtrustdata$day15totals<-day15totals[pos]
@@ -207,13 +209,9 @@ require(geogrid)
 require(sf)
 require(tmap)
 require(broom)
-require(tmap)
-# shp<-readOGR("Regions_(December_2017)_Boundaries.shp")
-# shp<-fortify(shp)
-# shp2<-shp
+require(cartogram)
 
-#shp<-readOGR("Countries_(December_2020)_UK_BFC.shp")
-#shp<-fortify(shp)
+
 
 shp<-readOGR("Countries_(December_2018)_Boundaries_GB_BUC.shp") # shape file from https://data.gov.uk/dataset/ca487e92-5414-4606-b01c-f841ed326690/countries-december-2018-boundaries-gb-buc
 shpLL = spTransform(shp, "+init=epsg:4326")  # needed to transform to standard co-corinante system
@@ -245,7 +243,7 @@ var_df2<-fortify(temp2, region= "OrgCode")
 
 # merge in total numbers of staff
 
-truststaff <- read_csv("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/additional_data/HCHS staff in NHS Trusts and CCGs in England, Organisation and Job Type CSV.csv")
+truststaff <- read_csv("HCHS staff in NHS Trusts and CCGs in England, Organisation and Job Type.csv")
 
 staff.totals<-tapply(truststaff$FTE, truststaff$`Org code`, "sum" )
 sel<-match(var_df2$id,names(staff.totals))
@@ -253,16 +251,15 @@ var_df2$totalstaff<-staff.totals[sel]
 
 # merge in total number of admissions in period
 
-tempadms<-read.csv("../create_dfs/AllAdmissions by day and trust.csv")
+tempadms<-read.csv("AllAdmissions by day and trust.csv")
 totaladms<-tapply(tempadms$n,INDEX =tempadms$Procode, FUN = "sum")
 sel<-match(var_df2$id,names(totaladms))
 var_df2$totaladms<-totaladms[sel]
-
+var_df2$trustnum<-match(var_df2$id,newtrustdata2$OrgCode)
 var_df2$TotalBedsAvailable <- newtrustdata2$TotalBedsAvailable[var_df2$trustnum]
 var_df2$GeneralAcuteBedsAvailable<-newtrustdata2$GeneralAcuteBedsAvailable[var_df2$trustnum]
 
 
-var_df2$trustnum<-match(var_df2$id,newtrustdata2$OrgCode)
 var_df2$day15std <-newtrustdata2$day15std[var_df2$trustnum]
 var_df2$day15totals<-newtrustdata2$day15totals[var_df2$trustnum]
 var_df2$day15per1000adms<-var_df2$day15totals*1000/var_df2$totaladms
@@ -658,5 +655,8 @@ grid.arrange(p.day15.new2, p.day8to14.new2, p.HCW.new2, p.ca.new2,
              p.occ.new2, p.age.new2, p.single.new2, p.volume.new2, 
              p.vacc52, p.vacc59, p.B117wk42, p.B117wk52,
              nrow = 3)
-
+# Merge in region into var_df2 and export for additional plotting
+sel<-match(var_df2$id,sitrep_weekly$org )
+var_df2$region<-sitrep_weekly$region[sel]
+saveRDS(var_df2,file = "var_df2.RDS")
 
