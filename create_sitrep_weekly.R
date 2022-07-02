@@ -2,7 +2,9 @@
 
 
 sitrep<-readRDS("sitreps_eng_expanded.rds")   
-# the above rds object is created by "reconstructing isolating HCWs.R" and already includes imputed HCW infections
+
+# Above RDS file is expanded sitrep feed
+# and includes imputed HCW infections
 
 
 #First step, filter by acute trusts and get weekly totals for the following
