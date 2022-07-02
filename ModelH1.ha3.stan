@@ -1,4 +1,4 @@
-//  Model H1:  covariates but no new variant or vaccine  
+//  Model H1.ha3: covariates but no new variant or vaccine  
   data {
     int<lower=1> N;   //number of observations
     int<lower=1> H;   //number of hospitals
