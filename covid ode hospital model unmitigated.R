@@ -3,7 +3,6 @@ library(deSolve)
 
 HospCovid <- function(t, x, parms) { 
   
-  
   with(as.list(c(parms, x)), {
     # beta_HH is transmission parameter for transmission from infectious hospital patient to susceptible hospital infection
     # mu is hospital death and discharge rate  for hospitalised (not for COVID). In general will be time varying.
@@ -47,9 +46,6 @@ HospCovid <- function(t, x, parms) {
     if(t> changepoint3 & t<= changepoint4) phi<-phi3
     if(t> changepoint4 ) phi<-phi4
     
-    
-    
-    
     # Derivatives 
     # a) For hospitalised population 
     dS_H <- -beta_HH*S_H*(I1_H + I2_H)/N_H   - betaprimed_HH*S_H*Iprimed_H/N_H  -beta_HCWH*S_H*(I1_HCW + I2_HCW)/N_H  - mu * S_H + alpha * S_C 
@@ -90,8 +86,6 @@ HospCovid <- function(t, x, parms) {
   })  # end with
 } # end HospCovid
 
-
-
 # in general components of next generation matrix will be time varying
 #R_HH<-   0.5   # R_HH= beta_HH/mean.infectious.period etc
 R_HH<-   0.8
@@ -125,7 +119,6 @@ K1<-K
 K1[2,3]<-0
 K1[3,3]<-0
 eigen(K1)
-
 
 # K2 is for 0 community transmission and 50% reduced hospital transmission
 K2<-K1
@@ -302,5 +295,4 @@ plot(out.df$ProportionNosocomialByOnsetTotal,type='l',main="Proportion nosocomia
 plot(out.df$ProportionNosocomialByOnset,type='l', main="Proportion nosocomial",sub="(by onset date)",ylab="",xlab="")
 
 
-# Now add a ggplot where figures are stacked 
 
