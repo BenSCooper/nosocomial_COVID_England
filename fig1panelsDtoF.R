@@ -99,8 +99,6 @@ if(repeat_sampling){  #  repeat_sampling is a flag set in the calling file, fig1
   prob.ever.detected.i<-data.frame(scenario=rep("i",100), probability.detected=prob.i.matrix[,100])
   prob.ever.detected.j<-data.frame(scenario=rep("j",100), probability.detected=prob.j.matrix[,100])
   
- 
-  
   prob.ever.detected<-rbind(prob.ever.detected.a,prob.ever.detected.b , prob.ever.detected.i, prob.ever.detected.j, prob.ever.detected.d,prob.ever.detected.e,prob.ever.detected.f,prob.ever.detected.g) 
   prob.ever.detected$order<-NA
   prob.ever.detected$order[prob.ever.detected$scenario=="a"] <-1
@@ -158,10 +156,8 @@ prob.detected.from.day8.j<-data.frame(scenario=rep("j",100), probability.detecte
 
 
 prob.detected.from.day15<-rbind(prob.detected.from.day15.a, prob.detected.from.day15.b,prob.detected.from.day15.i, prob.detected.from.day15.j, prob.detected.from.day15.d,prob.detected.from.day15.e,prob.detected.from.day15.f,prob.detected.from.day15.g)
-#vioplot(prob.detected.from.day15$probability.detected ~ prob.detected.from.day15$scenario, xlab="Screening scenario", ylab="Probability detected")
 
 prob.detected.from.day8<-rbind(prob.detected.from.day8.a, prob.detected.from.day8.b, prob.detected.from.day8.i, prob.detected.from.day8.j,prob.detected.from.day8.d,prob.detected.from.day8.e,prob.detected.from.day8.f,prob.detected.from.day8.g)
-#vioplot(prob.detected.from.day8$probability.detected ~ prob.detected.from.day8$scenario, xlab="Screening scenario", ylab="Probability detected")
 # order
 prob.detected.from.day15$order<-NA
 prob.detected.from.day15$order[prob.detected.from.day15$scenario=="a"] <-1
@@ -202,7 +198,6 @@ quantile(prob.detected.from.day15$probability.detected[prob.ever.detected$order=
 # prob  detected and classed as definite hai if  screening at 7 day intervals
 quantile(prob.detected.from.day15$probability.detected[prob.ever.detected$order==4],c(0.05,.5,.95))
 
-
 # prob.detected.from.day3<-rbind(prob.detected.from.day3.a, prob.detected.from.day3.b,prob.detected.from.day3.c,prob.detected.from.day3.d,prob.detected.from.day3.e,prob.detected.from.day3.f,prob.detected.from.day3.g)
 # vioplot(prob.detected.from.day3$probability.detected ~ prob.detected.from.day3$scenario, xlab="Screening scenario", ylab="Probability detected")
 
@@ -230,7 +225,6 @@ vioplot(prob.ever.detected$probability.detected ~ prob.ever.detected$order, ylab
 mtext(side=3,"Probability hospital-acquired infection detected",adj = 1,cex=csize, line=1)
 grid(ny=NA)
 
-#pdev.off()
 # Note that as we move to more frequent screening uncertainty is reduced as most infections are detected by screening
 # asymptomatic patients so incubation period uncertainty becomes irrelevant 
 # also repeat testing means uncertainty in sensitivity becomes less relevant as well

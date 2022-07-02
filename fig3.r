@@ -1,4 +1,5 @@
 # This assumes all required models are in the workspace. 
+# To ensure this either run models using "run regression models.r" or load saved model from RDS file
 #  layout(matrix(c(1,2,3,4,4,4), 2,3,byrow=T) )
 
 require(gtable)
@@ -63,13 +64,6 @@ color_scheme_set("pink")
  pA.part2<- pA.part2 +  theme_ipsum() 
  
 
- #  transforms<-list(`Single rooms`="exp", `Trust size`= "exp",`Occupancy`="exp", `Trust age`="exp", `B117`="exp", `Vaccinated HCWs` ="exp")
- 
- 
- # pA<- mcmc_intervals(pmod, pars=c(parstoplot.1,parstoplot.2),
- #                    transformations=transforms,
- #                     prob=0.5,prob_outer=.9, 
- #                     outer_size = 1.2, point_size = 3)
 
 
  # panel B is estimates and intervals for hcw acquisition (for supplmentary material)
@@ -91,10 +85,7 @@ color_scheme_set("pink")
  parstoplot.2<-c("Single rooms", "Trust size","Occupancy", "Trust age","Heated volume/bed", "Alpha","Vaccinated HCWs" )
  
  color_scheme_set("brightblue")
- # pB<- mcmc_intervals(pmod, pars=parstoplot,
- #                     prob=0.5,prob_outer=.90, 
- #                     outer_size = 1.2, point_size = 3,
- # )
+
  
  pB.part1<- mcmc_intervals(pmod, pars=parstoplot.1,
                            prob=0.5,prob_outer=.9, 
@@ -140,9 +131,9 @@ color_scheme_set("pink")
  
 # panel D is posterior predictive distributions for patients 
  #plot.for.largest.trusts<-TRUE
- #num.trusts.per.plot<-20
+num.trusts.per.plot<-20
  plot.for.largest.trusts<-TRUE
- num.trusts.per.plot<-96
+ # num.trusts.per.plot<-96
 trusts<-unique(sitrep_noso_covid_data4$trustindex)
 if(plot.for.largest.trusts){
   i<-match(trusts,sitrep_noso_covid_data4$trustindex)
@@ -199,8 +190,8 @@ pA.part2
 pB.part1
 pB.part2
 
-PC
+
 pD
 pE
-
-
+pF
+pG
