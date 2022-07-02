@@ -68,7 +68,6 @@ transformed parameters {
   real<lower=0> k[H];
 
   real<lower=0>  mu[N];  //observation mean
-  //real sigma_a = sqrt(sigmasq_a);
 
   real<lower=0>  phi0; 
 

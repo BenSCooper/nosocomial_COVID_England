@@ -1,4 +1,4 @@
-//  Model ADM1.ha2:  dependent var is covid confirmed admissions,  adjusting for other infecteds
+//  Model ADN1.ha2:  dependent var is covid confirmed admissions,  adjusting for other infecteds
 
 data {
   int<lower=1> N;   //number of observations
@@ -102,9 +102,6 @@ transformed parameters {
   }
   
   for (n in 1:N){
-    //  mu[n] = a[trustindex[n]] + b0*lag1_ca[n] + c0*lag1ha1[n] +d0*lag1hcw[n] ;
-    //this has no mixing problems  mu[n] = a0 + b0*lag1_ca[n] + c0*lag1ha1[n] +d0*lag1hcw[n] ;
-  //    mu[n] = (a[trustindex[n]] + b0*lag1_ca_primed[n] + c0*lag1ha2_primed[n] +d0*lag1hcw_primed[n]*exp(v0*hcw_vax_plus3[n]))*exp(sr0*proportion_single_rooms_std[n]+occ0*occupancy_std[n]+agetrust0*percent_pre1965_std[n]+ sizetrust0*trustsize_std[n]+ vol*trustvolperbed_std[n]+ nv0*prop_nv[n]) ;
     mu[n] = (a[trustindex[n]] + b0*lag1adm_primed[n] + c0*lag1ha2_primed[n] +d0*lag1hcw_primed[n]) ;
     phi[n] = lag1_adm[n];
     //phi[n] = lag1ha2[n];

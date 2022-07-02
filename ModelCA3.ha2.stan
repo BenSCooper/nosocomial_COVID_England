@@ -1,4 +1,4 @@
-//  Model CA3v2:  dependent var is covid versions,  adjusting for hcw infections 
+//  Model CA3v2:  dependent var is community acquried admission in previous week  - combines admitted with covid with confirmed pos in first 48 hours of stay
 
 data {
   int<lower=1> N;   //number of observations
@@ -19,7 +19,7 @@ data {
   int<lower=0> lag2ha3[N];    // noscomial cases two weeks ago -  15 day definition 
   
   
-  int<lower=0> ca[N];    //community acquried admission in previous week 
+  int<lower=0> ca[N];    //community acquried admission in previous week  - combines admitted with covid with confirmed pos in first 48 hours of stay
   int<lower=0> lag1_ca[N];    //community acquried admission in previous week 
   int<lower=0> lag2_ca[N];    //community acquried admission two weeks ago
   
