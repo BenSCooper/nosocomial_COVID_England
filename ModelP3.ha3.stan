@@ -1,4 +1,4 @@
-//  Model P3:  trust covariates and new variant plus vaccine  
+//  Model P3.ha3:  trust covariates and new variant plus vaccine  
 
 data {
     int<lower=1> N;   //number of observations
