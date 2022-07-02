@@ -3,7 +3,6 @@ library(deSolve)
 
 HospCovid <- function(t, x, parms) { 
   
-  
   with(as.list(c(parms, x)), {
     # beta_HH is transmission parameter for transmission from infectious hospital patient to susceptible hospital infection
     # mu is hospital death and discharge rate  for hospitalised (not for COVID). In general will be time varying.
