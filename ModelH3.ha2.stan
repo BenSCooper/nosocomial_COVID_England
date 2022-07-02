@@ -1,4 +1,4 @@
-//  Model H3:  trust covariates and new variant plus vaccine  
+//  Model H3.ha2:  trust covariates and new variant plus vaccine  
 
 data {
     int<lower=1> N;   //number of observations
