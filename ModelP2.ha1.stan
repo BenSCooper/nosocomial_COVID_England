@@ -1,4 +1,4 @@
-//  Model P2:  trust covariates but no new variant or vaccine  
+//  Model P2.ha1:  trust covariates but no new variant or vaccine  
 
 data {
     int<lower=1> N;   //number of observations
