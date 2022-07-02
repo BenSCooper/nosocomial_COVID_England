@@ -1,4 +1,4 @@
-//  Model ADN1.ha2:  dependent var is covid confirmed admissions,  adjusting for other infecteds
+//  Model ADM1.ha2:  dependent var is covid confirmed admissions,  adjusting for other infecteds
 
 data {
   int<lower=1> N;   //number of observations
