@@ -302,5 +302,4 @@ plot(out.df$ProportionNosocomialByOnsetTotal,type='l',main="Proportion nosocomia
 plot(out.df$ProportionNosocomialByOnset,type='l', main="Proportion nosocomial",sub="(by onset date)",ylab="",xlab="")
 
 
-# Now add a ggplot where figures are stacked 
 
