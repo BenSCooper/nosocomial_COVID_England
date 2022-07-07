@@ -4,8 +4,8 @@
 This repository contains code needed to reproduce the analysis in the manuscript "The burden and dynamics of hospital-acquired SARS-CoV-2 in England"
 For access to data sources please see documentation within the manuscript.
 
-It also contains semi- synthetic data, where fields in data frames that we do not yet have permission to share have been replaced by randoms draws 
-from a saturated Poisson model (i.e. with the same expected value for each point as the observation). These are stored in  thie files
+It also contains semi-synthetic data, where fields in data frames that we do not yet have permission to share have been replaced by random draws 
+from a saturated Poisson model (i.e. with the same expected value for each point as the observation). These are stored in thie files:
 
 synthetic_sitreps_eng_expanded.rds , which contains infection data with hospital-associated infections replaced with model-generated synthesised data
 synthetic_vacc_cov_by_region.csv, which contains vaccine coverage in HCWs replaced with model-generated synthesised data
