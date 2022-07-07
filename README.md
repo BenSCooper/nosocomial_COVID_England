@@ -4,21 +4,18 @@
 This repository contains code needed to reproduce the analysis in the manuscript "The burden and dynamics of hospital-acquired SARS-CoV-2 in England"
 For access to data sources please see documentation within the manuscript.
 
-Note: we will add synthetic data based on saturated models to allow the analysis to be replicated approximately, and when we have permission to share data that will be shared here. We will also add some wrapper code to copy over synethic data and run all functions.
+It also contains semi- synthetic data, where fields in data frames that we do not yet have permission to share have been replaced by randoms draws 
+from a saturated Poisson model (i.e. with the same expected value for each point as the observation). These are stored in  thie files
 
-To run the code copy all files to a working directory and run these files in turn (this will require installing packages if they are not already installeded)
+synthetic_sitreps_eng_expanded.rds , which contains infection data with hospital-associated infections replaced with model-generated synthesised data
+synthetic_vacc_cov_by_region.csv, which contains vaccine coverage in HCWs replaced with model-generated synthesised data
+Code to generate synthetic data (given real data) is contained in the file "Create synthetic data.R"
 
-create_sitrep_weekly.R
-merge_vaccine_data.R
-merge_nv_data.R
-fig1.R
-fig2.R
-run regressioin models.r. 
-fig3.R
-fig4.R
-figS1.R
-figs4.R
-figS7.R
+To run the code copy all files to a  directory, make this the current working directory in R, and run the code in the file
+
+"runall.R"
+
+By default this is set to run code using synthetic data, though this can be change by setting the flag runwithsyntheticdata to FALSE. 
 
 
 
