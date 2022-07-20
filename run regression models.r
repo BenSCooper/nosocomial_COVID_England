@@ -18,7 +18,7 @@ fields.for.stan.v2<-c("org","wk", "ha_cases1","ha_cases2", "ha_cases3","mean_sta
                       "ha3_cases_lag1", "ha3_cases_lag2",  "hcw_cases_lag1","hcw_cases_lag2")
 fields.for.stan.v3<-c("org","wk", "ha_cases1","ha_cases2","ha_cases3", "mean_staff_covid_isolated","ca_cases_lag1", 
                       "ca_cases_lag2","ha1_cases_lag1","ha1_cases_lag2", "ha2_cases_lag1", "ha2_cases_lag2",
-                      "ha3_cases_lag1", "ha3_cases_lag2",  "hcw_cases_lag1","hcw_cases_lag2","non_cov_ns_prev")
+                      "ha3_cases_lag1", "ha3_cases_lag2",  "hcw_cases_lag1","hcw_cases_lag2")
 fields.for.stan.v4<-c("org","wk", "ha_cases1","ha_cases2","ha_cases3", "mean_staff_covid_isolated","adm_cases","adm_cases_lag1","adm_cases_lag2","ca_cases","ca_cases_lag1", 
                       "ca_cases_lag2","ha1_cases_lag1","ha1_cases_lag2", "ha2_cases_lag1", "ha2_cases_lag2","ha3_cases_lag1", 
                       "ha3_cases_lag2", "hcw_cases_lag1","hcw_cases_lag2", "prop_nv",
