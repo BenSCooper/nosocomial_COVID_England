@@ -20,9 +20,9 @@ temp$n_inpatients_diagnosed_8_14 <- rpois(n, temp$n_inpatients_diagnosed_8_14)
 temp$n_inpatients_diagnosed_15_  <- rpois(n, temp$n_inpatients_diagnosed_15_)
 
 
-fieldstoinclude<-match(c("date", "region", "org_code", "org_name", "n_inpatients_diagnosed",
+fieldstoinclude<-match(c("date", "region", "org_code", "org_name", "organisation_type","n_inpatients_diagnosed",
                          "n_inpatients_diagnosed_0_2","n_inpatients_diagnosed_3_7","n_inpatients_diagnosed_8_14",
-                         "n_inpatients_diagnosed_15_","day","hcwcovidisolated_cleaned",
+                         "n_inpatients_diagnosed_15_","n_patients_admitted","day","hcwcovidisolated_cleaned",
                          "hcwcovid_daily_isolated1","hcwcovid_daily_isolated2","hcwcovid_daily_isolated3",
                          "hcwcovid_daily_isolated4", "hcwcovid_daily_isolated5","hcwcovid_daily_isolated6",
                          "hcwcovid_daily_isolated7", "hcwcovid_daily_isolated8",
@@ -31,7 +31,8 @@ fieldstoinclude<-match(c("date", "region", "org_code", "org_name", "n_inpatients
 
 synthetic_sitreps_eng_expanded <- temp[, fieldstoinclude]
 
-write_rds(x = synthetic_sitreps_eng_expanded, "synthetic_sitreps_eng_expanded.rds")
+saveRDS(synthetic_sitreps_eng_expanded, "synthetic_sitreps_eng_expanded.rds")
+
 
 
 #  Now also create synthetic data for vaccine coverage. 
@@ -158,7 +159,8 @@ pos<-match("YH", vax.data$region)
 staffFTES<-regionalstaff[4]/2
 newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
 
-write.csv(newvax.data2,file = "synthetic_vacc_cov_by_region.csv" )
+write.csv(newvax.data2,file = "synthetic_vacc_cov_by_region.csv" ,row.names=F )
+
 
 
 
