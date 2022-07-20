@@ -86,9 +86,11 @@ axis(side=1,at=c(1,5,10,15,20,25,30))
 
 
 # Call another file to do this
-repeat_sampling<-TRUE  # set to TRUE if want to repeat sampling for these panels 
+repeat_sampling<-FALSE  # set to TRUE if want to repeat sampling for these panels 
 
-source("fig1panelsDtoF.R")
+source("fig1panelsDtoF.R")                                                                                        repeat_sampling<-TRUE  # set to TRUE if want to repeat sampling for these panels 
+                                                                                        
+                                                                                        source("fig1panelsDtoF.R")
 
 # Now add time series plots of numbers
 
@@ -139,12 +141,13 @@ if(newsims){
     for(j in 1:length(estimated.total.nosocomial)){
       x<-nosocomial15day.dailytotals[j]
       if(!is.na(x)){
-        # then calculate posterior distribution of total cases (with a uniform prior on 1, maxcases) 
-        post<-binom.ntrial.pos(x,p,rep(1,maxcases))
-        post.oxf<-binom.ntrial.pos(x,p.oxf,rep(1,maxcases))
+        # then calculate posterior distribution of total cases (with a uniform prior on 0, maxcases) 
+        post<-binom.ntrial.pos(x,p,rep(1,(1+maxcases)))
+        post.oxf<-binom.ntrial.pos(x,p.oxf,rep(1,(1+maxcases)))
         
-        samp.tot<-sample(1:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post)
-        samp.tot.oxf<-sample(1:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post.oxf)
+        samp.tot<-sample(0:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post)
+        samp.tot.oxf<-sample(0:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post.oxf)
+        
         col.range<-(i-1)*numdawsfromposteriorpersim + (1:numdawsfromposteriorpersim)
         estimated.total.nosocomial.m[col.range, j]<-samp.tot
         estimated.total.nosocomial.m.oxf[col.range, j]<-samp.tot.oxf
