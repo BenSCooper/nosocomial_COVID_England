@@ -1,8 +1,10 @@
-#  Run all pmodels to be reported in paper/report of nosocomial transmission using sitrep
+#  Run all models to be reported in paper/report of nosocomial transmission using sitrep
 #  where dependent variable is patient acquisition. 
 #  These are named ModelP1...Modelp8
 
 # Run this after setting up the data using "preparedata.R" and "fig2.R"
+
+#  Note that running all consecutively is likely to exhaust memory
 
 source("plot_functions.R") # loads functions for plotting aspects of fitted models
 
@@ -431,7 +433,7 @@ modelP1.ha3 <- stan(
 )
 
 check_hmc_diagnostics(modelP1.ha3)
-check_n_eff(fit)
+#check_n_eff(fit)
 summary(modelP1.ha3 ,pars=c("a0","b0","c0","d0","sigmasq_a","sigmasq_k","phi0", "k0"))
 summary(modelP1.ha3 ,pars=c("a0","ca_coeff","ha_coeff","hcw_coeff","sigmasq_a","phi0", "k0"))
 plot(modelP1.ha3 ,pars=c("a0","ca_coeff","ha_coeff","hcw_coeff","sigmasq_a","phi0", "k0"))
@@ -499,7 +501,7 @@ print(modelP3.ha3,pars=c("a0","ca_coeff","ha_coeff","hcw_coeff","sr0", "vol","oc
 loo(modelP3.ha3)
 saveRDS(modelP3.ha3,"modelP3.ha3")
 
-#save.image()
+
 
 # **************************************
 # now models for HCW acquisitions 
