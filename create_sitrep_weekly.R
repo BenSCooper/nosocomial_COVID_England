@@ -42,12 +42,12 @@ days_since_Jan12020<-as.integer(sitrep$date - date("2020-01-01"))
 # now calc week number so days 1to7 are week 1, days 8-14 are week 2 etc
 sitrep$week<-days_since_Jan12020 %/% 7
 
-temp<-aggregate(sitrep$non_cov_ns_prev, by=list(org=sitrep$org_code), FUN="max",na.rm=T) # take max of non_cov_ns_prev (number beds occuplied by patients not known or suspected to have covid)
-temp$x[temp$x==-Inf] <-NA
-
-sel<-match(sitrep$org_code, temp$org)
-sitrep$non_cov_ns_prev2<-temp$x[sel]
-rm(sel, temp)
+# temp<-aggregate(sitrep$non_cov_ns_prev, by=list(org=sitrep$org_code), FUN="max",na.rm=T) # take max of non_cov_ns_prev (number beds occuplied by patients not known or suspected to have covid)
+# temp$x[temp$x==-Inf] <-NA
+# 
+# sel<-match(sitrep$org_code, temp$org)
+# sitrep$non_cov_ns_prev2<-temp$x[sel]
+# rm(sel, temp)
 
 
 #sitrep_weekly<-aggregate(sitrep[,c(6:26)], by=list(wk=sitrep$week, org=sitrep$org_code), FUN="sum")
