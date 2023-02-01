@@ -1,7 +1,7 @@
 # Analysis of nosocomial COVID data in England
 
 
-This repository contains code needed to reproduce the analysis in the manuscript "The burden and dynamics of hospital-acquired SARS-CoV-2 in England"
+This repository contains code needed to reproduce the analysis in the manuscript "The burden and dynamics of hospital-acquired SARS-CoV-2 in England".
 For access to data sources please see documentation within the manuscript.
 
 It also contains semi-synthetic data, where fields in data frames that we do not yet have permission to share have been replaced by random draws 
