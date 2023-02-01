@@ -1,16 +1,17 @@
 # Create synthetic data 
 
 
-temp<-readRDS("sitreps_eng_expanded.rds")
+temp<-readRDS("realdata_sitreps_eng_expanded.rds")
 
 
 # Fields to replace with synthetic data which we do with a saturated model
 # For figure 1
+
 # n_inpatients_diagnosed_0_2
 # n_inpatients_diagnosed_3_7
 # n_inpatients_diagnosed_8_14
 # n_inpatients_diagnosed_15_
-# Also need dates and organisation codes
+# Also need dates and organisation codes and n_patients_admitted
 
 
 n<-dim(temp)[1]
@@ -43,69 +44,69 @@ saveRDS(synthetic_sitreps_eng_expanded, "synthetic_sitreps_eng_expanded.rds")
 vax.data<-read.csv(file = "../create_dfs/vacc_cov_by_region.csv",  na.strings = "*")
 
 # then read in staff data and get staff numbers by region
-staffdata<-read.csv("..//../additional_data/HCHS staff in NHS Trusts and CCGs in England, Organisation and Job Type CSV.csv")
+staffdata<-read.csv("..//../additional_data/HCHS staff in NHS Trusts and CCGs in England, Organisation and Job Type.csv")
 
 regionalstaff<-tapply(staffdata$FTE,staffdata$NHSE.region.name, FUN = "sum")
 # then create version of vax.data with number by multiplying by staff in each region 
-# (to do this split Midelands staff into East and West 50:50, similarly for NE and Yorks)
+# (to do this split Midlands staff into East and West 50:50, similarly for NE and Yorks)
 
 vax.data2<-vax.data
 #East midlands
 n<-dim(vax.data)[2]
 pos<-match("EM", vax.data$region)
 staffFTES<-regionalstaff[3] /2
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #East of England
 n<-dim(vax.data)[2]
 pos<-match("EE", vax.data$region)
 staffFTES<-regionalstaff[1] 
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #London
 n<-dim(vax.data)[2]
 pos<-match("LN", vax.data$region)
 staffFTES<-regionalstaff[2] 
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #NE
 n<-dim(vax.data)[2]
 pos<-match("NE", vax.data$region)
 staffFTES<-regionalstaff[4]/2
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #NW
 n<-dim(vax.data)[2]
 pos<-match("NW", vax.data$region)
 staffFTES<-regionalstaff[5]
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #SE
 n<-dim(vax.data)[2]
 pos<-match("SE", vax.data$region)
 staffFTES<-regionalstaff[6]
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #SW
 n<-dim(vax.data)[2]
 pos<-match("SW", vax.data$region)
 staffFTES<-regionalstaff[7]
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #WM
 n<-dim(vax.data)[2]
 pos<-match("WM", vax.data$region)
 staffFTES<-regionalstaff[3]/2
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 #Yorkshire
 n<-dim(vax.data)[2]
 m<-dim(vax.data)[1]
 pos<-match("YH", vax.data$region)
 staffFTES<-regionalstaff[4]/2
-vax.data2[pos,2:n] <- round(staffFTES*vax.data[pos,2:n])
+vax.data2[pos,3:n] <- round(staffFTES*vax.data[pos,3:n])
 
-# now create a df with mean new vaccinations on each day in each region baesd on above
+# now create a df with mean new vaccinations on each day in each region based on above
 
 newvax.data<-vax.data2
-for(j in 2:n){
+for(j in 3:n){
   for(i in 1:m){
-      if(j ==2 ) newinfections<-vax.data2[i,j ] else newinfections<-vax.data2[i,j ] - vax.data2[i,j-1 ]
-      if (is.na(newinfections)) newinfections<-0
-      sample<-rpois(1,newinfections ) # sample from saturated model
-      if(j ==2 ) newvax.data[i,j] <-sample else newvax.data[i,j] <- sample+newvax.data[i,j-1] 
+      if(j ==3 ) newvaccinations<-vax.data2[i,j ] else newvaccinations<-vax.data2[i,j ] - vax.data2[i,j-1 ]
+      if (is.na(newvaccinations)) newvaccinations<-0
+      sample<-rpois(1,newvaccinations ) # sample from saturated model
+      if(j ==3 ) newvax.data[i,j] <-sample else newvax.data[i,j] <- sample+newvax.data[i,j-1] 
   }
 }
 
@@ -116,48 +117,48 @@ newvax.data2<-newvax.data
 n<-dim(vax.data)[2]
 pos<-match("EM", vax.data$region)
 staffFTES<-regionalstaff[3] /2
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #East of England
 n<-dim(vax.data)[2]
 pos<-match("EE", vax.data$region)
 staffFTES<-regionalstaff[1] 
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #London
 n<-dim(vax.data)[2]
 pos<-match("LN", vax.data$region)
 staffFTES<-regionalstaff[2] 
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #NE
 n<-dim(vax.data)[2]
 pos<-match("NE", vax.data$region)
 staffFTES<-regionalstaff[4]/2
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #NW
 n<-dim(vax.data)[2]
 pos<-match("NW", vax.data$region)
 staffFTES<-regionalstaff[5]
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #SE
 n<-dim(vax.data)[2]
 pos<-match("SE", vax.data$region)
 staffFTES<-regionalstaff[6]
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #SW
 n<-dim(vax.data)[2]
 pos<-match("SW", vax.data$region)
 staffFTES<-regionalstaff[7]
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #WM
 n<-dim(vax.data)[2]
 pos<-match("WM", vax.data$region)
 staffFTES<-regionalstaff[3]/2
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 #Yorkshire
 n<-dim(vax.data)[2]
 m<-dim(vax.data)[1]
 pos<-match("YH", vax.data$region)
 staffFTES<-regionalstaff[4]/2
-newvax.data2[pos,2:n] <- newvax.data[pos,2:n]/staffFTES
+newvax.data2[pos,3:n] <- newvax.data[pos,3:n]/staffFTES
 
 write.csv(newvax.data2,file = "synthetic_vacc_cov_by_region.csv" ,row.names=F )
 
