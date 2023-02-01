@@ -1,4 +1,3 @@
-%nosocomial\_COVID\_England
 # Analysis of nosocomial COVID data in England
 
 
@@ -18,7 +17,7 @@ To replicate the analysis copy all files to a directory, make this the current w
 
 By default this is set to run code using synthetic data, though this can be changed by setting the flag runwithsyntheticdata to FALSE. 
 
-# Note on generation of synthetic data
+## Note on generation of synthetic data
 
 The analyses makes use of several types of data from multiple sources. While most of these are publicly available for immediate download, there are two types of data for which formal data access requests are required: vaccine coverage data and data on hospital-onset COVID-19 infections.  To ensure transparency we have therefore created a synthetic versions of both data sets as outlined below. 
 
