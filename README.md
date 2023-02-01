@@ -9,7 +9,7 @@ from a saturated Poisson model (i.e. with the same expected value for each point
 
 i) synthetic_sitreps_eng_expanded.rds , which contains infection data with hospital-associated infections replaced with model-generated synthesised data; and ii)  synthetic_vacc_cov_by_region.csv, which contains vaccine coverage in HCWs replaced with model-generated synthesised data. See "Note on generation of synthetic data" below for details of how this synthetic data was generated.
 
-Code to generate synthetic data (given real data) is contained in the file "Create synthetic data.R", though note that for this to work the real data is needed, and for this reason the synthetic data is included in repository.
+Code to generate synthetic data (given real data) is contained in the file "Create synthetic data.R", though note that for this to work the real data is needed, and for this reason the synthetic data is included in the repository.
 
 To replicate the analysis copy all files to a directory, make this the current working directory in R, and run the code in the file
 
