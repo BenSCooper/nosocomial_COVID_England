@@ -37,7 +37,7 @@ lines(1:maxday,inc.period.q[2,], )
 
 # Panel B: PCR sensitivity as a function of days since infection
 
-sens_post<-readRDS("Hellewell_fig3bdata.RDS")
+  sens_post<-readRDS("Hellewell_fig3bdata.RDS")
 
 # Hellewell_fig3bdata.RDS holds posterior of PCR sensitivity as function of time since infection
 # There are 10 time points per day and 30 days in total, so including time 0 there are 301 columns
@@ -86,11 +86,10 @@ axis(side=1,at=c(1,5,10,15,20,25,30))
 
 
 # Call another file to do this
-repeat_sampling<-FALSE  # set to TRUE if want to repeat sampling for these panels 
+repeat_sampling<-TRUE  # set to TRUE if want to repeat sampling for these panels 
 
-source("fig1panelsDtoF.R")                                                                                        repeat_sampling<-TRUE  # set to TRUE if want to repeat sampling for these panels 
-                                                                                        
-                                                                                        source("fig1panelsDtoF.R")
+source("fig1panelsDtoF.R") 
+
 
 # Now add time series plots of numbers
 
