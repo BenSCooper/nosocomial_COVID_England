@@ -2,7 +2,7 @@
 
 
 sitrep<-readRDS("synthetic_sitreps_eng_expanded.rds")  
-# Above RDS file is expanded sitrep feed
+# Above RDS file is a synthetic version of expanded sitrep feed where fields that are not publicly availalbe have been simulated from a saturated model
 # and includes imputed HCW infections
 
 
@@ -40,30 +40,13 @@ days_since_Jan12020<-as.integer(sitrep$date - date("2020-01-01"))
 
 # now calc week number so days 1to7 are week 1, days 8-14 are week 2 etc
 sitrep$week<-days_since_Jan12020 %/% 7
-
-# temp<-aggregate(sitrep$non_cov_ns_prev, by=list(org=sitrep$org_code), FUN="max",na.rm=T) # take max of non_cov_ns_prev (number beds occuplied by patients not known or suspected to have covid)
-# temp$x[temp$x==-Inf] <-NA
-# 
-# sel<-match(sitrep$org_code, temp$org)
-# sitrep$non_cov_ns_prev2<-temp$x[sel]
-# rm(sel, temp)
-
-
-# #sitrep_weekly<-aggregate(sitrep[,c(6:26)], by=list(wk=sitrep$week, org=sitrep$org_code), FUN="sum")
- sitrep_weekly<-aggregate(sitrep[,c(6:24)], by=list(wk=sitrep$week, org=sitrep$org_code), FUN="sum")
-# 
-# sel<-match("non_cov_ns_prev2",names(sitrep))
-# temp<-aggregate(sitrep[,c(sel)], by=list(wk=sitrep$week, org=sitrep$org_code), FUN="mean",na.rm=T) # take mean of non_cov_ns_prev (number beds occuplied by patients not known or suspected to have covid)
-# 
-# sitrep_weekly$non_cov_ns_prev <-temp$x
-
+sitrep_weekly<-aggregate(sitrep[,c(6:24)], by=list(wk=sitrep$week, org=sitrep$org_code), FUN="sum")
 temp<-match(sitrep_weekly$org, sitrep$org_code) 
 region<-sitrep$region[temp]
 orgname<-sitrep$org_name[temp]
 sitrep_weekly$region<-region
 sitrep_weekly$org_name<-orgname
 rm(region,temp,orgname)
-
 sitrep_weekly$adm_cases<-sitrep_weekly$n_patients_admitted
 sitrep_weekly$ca_cases<-sitrep_weekly$n_inpatients_diagnosed_0_2 + sitrep_weekly$n_patients_admitted
 sitrep_weekly$ha_cases1<-sitrep_weekly$n_inpatients_diagnosed_3_7 + sitrep_weekly$n_inpatients_diagnosed_8_14 + sitrep_weekly$n_inpatients_diagnosed_15_ 
