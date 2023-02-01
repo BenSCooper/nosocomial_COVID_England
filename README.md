@@ -23,7 +23,7 @@ The analyses makes use of several types of data from multiple sources. While mos
 
 1. Vaccine coverage data were available from the SIREN study which we used to derive estimates of the proportion of healthcare workers who had been immunised in each NHS region on each day. As individual is considered to be “immunised”, for this work,  if they had ben given one or more doses of any recognised COVID-19 vaccine at least three weeks previously. We then used staffing data from the NHS to derive estimates of the number of staff who were immunised on each day in each region. Let imm_ij represent the number estimated to be immunised in region i on day j. Synthetic immunisation data syn_imm_ij, were then obtained  by sampling from a saturated Poisson model, i.e. syn_imm_ij, ~ Poisson(imm_ij), and these synthetic immunisation data were in turn used to derive the proportion immunised by date and region used in the model. 
 
-We used a similar procedure to create synthetic data for infections classified as indeterminate healthcare-
+2. We used a similar procedure to create synthetic data for infections classified as indeterminate healthcare-
 associated,  probable healthcare-associated, and definite healthcare-associated. This again required 
 sampling from a saturated Poisson model. i.e. the number of healthcare-associated SARS-CoV-2 infections in hospital i on day j was obtained by sampling from a Poisson distribution with a mean given by the observed  number of healthcare-associated  SARS-CoV-2 infections in hospital i on day j.
 
