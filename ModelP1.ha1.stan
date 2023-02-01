@@ -129,6 +129,3 @@ generated quantities {
  hcw_coeff = d0/124.3;
 
 }
-
-
-  
