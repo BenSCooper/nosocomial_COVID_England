@@ -110,7 +110,7 @@ if(repeat_sampling){  #  repeat_sampling is a flag set in the calling file, fig1
   prob.ever.detected$order[prob.ever.detected$scenario=="f"] <-7
   prob.ever.detected$order[prob.ever.detected$scenario=="g"] <-8
   
-} # end if(repeat_sampling)
+} # end
 
 # Violin plots
 # First plot the overall probabilty of detecting hospital-acquired cases 
