@@ -1,5 +1,5 @@
-# nosocomial\_COVID\_England
-Analysis of nosocomial COVID data in England
+%nosocomial\_COVID\_England
+# Analysis of nosocomial COVID data in England
 
 
 This repository contains code needed to reproduce the analysis in the manuscript "The burden and dynamics of hospital-acquired SARS-CoV-2 in England"
