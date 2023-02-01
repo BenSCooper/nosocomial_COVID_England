@@ -2,7 +2,7 @@
 
 vax.data<-read.csv(file = "vacc_cov_by_region.csv",  na.strings = "*")
 
-
+vax.data <- vax.data[,-1]
 # So column 1 has region code and col headings for cols 2... give data, and the cell entries show proportion of sampled
 # hcws vaccinated 
 
@@ -59,7 +59,7 @@ vax.data<-vax.data[sel,]
 vdata<- reshape(vax.data, varying= cols[2:w], direction= "long", idvar="region", sep="")
 
 
-# now give vax coverage by week and standardise ergions names
+# now give vax coverage by week and standardise region names
 
 # in sitrep week is calculated as
 
