@@ -1,6 +1,6 @@
 # fig S4 results of fitting regression models to simulated data 
 # 
-require(MASS)
+# require(MASS)
 draw_generation_interval<-function(n){
   # n is the number of generation intervals to draw
   # Generation time estimates from Ferretti  (Science 2020)
@@ -239,12 +239,12 @@ k_H <- 0.5 # clustering parameter for negbin distribution for  secondary cases f
 
 
 
-require(gtable)
-require(ggplot2)
-require(gridExtra)
-require(hrbrthemes)
-require(viridis)
-require(RColorBrewer)
+# require(gtable)
+# require(ggplot2)
+# require(gridExtra)
+# require(hrbrthemes)
+# require(viridis)
+# require(RColorBrewer)
 
 
 #  sample from a grid to create lookup table for R component values
@@ -293,8 +293,8 @@ samplesA<-ha_predictors_lookup_5day_agg
 m<-aggregate(samplesA$ha_cases_lag1, list(p_P=samplesA$p_P,R_PP=samplesA$R_PP),mean)   
 # geom_contour will fail unless we interpolate first. 
 # Use the akima package for this.
-require(akima)
-require(MASS)
+#require(akima)
+#require(MASS)
 m2<-interp(x=m$p_P, y=m$x,  z=m$R_PP)
 filled.contour(m2,xlab="Probability of detecting hospital acquired infection", ylab="coefficient",key.title = title(main="R"))
 # ggplot version below...
@@ -359,7 +359,7 @@ samplesB<-ha_predictors_lookup_5day_agg
 m<-aggregate(samplesB$hcw_cases_lag1, list(p_P=samplesB$p_P,R_HP=samplesB$R_HP),mean)   
 # geom_contour will fail unless we interpolate first. 
 # Use the akima package for this.
-require(akima)
+#require(akima)
 m2<-interp(x=m$p_P, y=m$x,  z=m$R_HP)
 filled.contour(m2,xlab="Probability of detecting hospital acquired infection", ylab="coefficient",key.title = title(main="R"))
 # ggplot version below...
@@ -424,7 +424,7 @@ m<-aggregate(ha_predictors_lookup_5day_agg$ca_cases_lag1, list(p_P=ha_predictors
 
 # geom_contour will fail unless we interpolate first. 
 # Use the akima package for this.
-require(akima)
+#require(akima)
 m2<-interp(x=m$p_P, y=m$x,  z=m$R_CP)
 filled.contour(m2,xlab="Probability of detecting hospital acquired infection", ylab="coefficient",key.title = title(main="R"))
 # ggplot version below...
