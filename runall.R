@@ -1,4 +1,41 @@
 # runs all code using real data if available otherwise using synthetic data
+library(lubridate)
+library(readr)
+library(readxl)
+library(PostcodesioR)
+library(remotes)
+library(ggplot2)
+library(ggvoronoi)
+library(rgdal)
+library(maps)
+library(tidyverse)
+library(rgeos)
+library(maptools)
+library(sp)
+library(gtable)
+library(gridExtra)
+library(inlmisc)
+library(geogrid)
+library(sf)
+library(tmap)
+library(broom)
+library(cartogram)
+library(rstan)
+library(splines)
+library(gtable)
+library(gridExtra)
+library(bayesplot)
+library(hrbrthemes)
+library(viridis)
+library(RColorBrewer)
+library(deSolve)
+library(lhs)
+library(dplyr)
+library(cowplot)
+library(GGally)
+require(akima)
+library(MASS)
+
 
 runwithsyntheticdata<-TRUE # if set to true runs all code with synthetic data
 
@@ -43,7 +80,7 @@ source("fig3.r")
 source("fig4.r")
 source("figS1.r")
 source("fig S4.r")
-source("fig S5.r")
+# source("fig S5.r")  # code for fig 5 is within "fig S4.r"
 
 
 # Cleanup afterwards by renaming files back
