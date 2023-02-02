@@ -317,9 +317,9 @@ parameters0[["trigger_lockdown_end"]]<-20
 test<-ode(y=ystart0,times=times, func=HospCovid, parameters0, events=list(func=eventfun, root=TRUE),
           rootfun=rootfun)
 
-out.null.high<-ode(y=ystart,times=times, func=HospCovid, parameter.null.high)
-out.null.med<-ode(y=ystart,times=times, func=HospCovid, parameter.null.med)
-out.null.low<-ode(y=ystart,times=times, func=HospCovid, parameter.null.low)
+out.null.high<-ode(y=ystart0,times=times, func=HospCovid, parameter.null.high)
+out.null.med<-ode(y=ystart0,times=times, func=HospCovid, parameter.null.med)
+out.null.low<-ode(y=ystart0,times=times, func=HospCovid, parameter.null.low)
 R_Cmax.high<-max(as.data.frame(out.null.high)$R_C)
 R_Cmax.med<-max(as.data.frame(out.null.med)$R_C)
 R_Cmax.low<-max(as.data.frame(out.null.low)$R_C)
