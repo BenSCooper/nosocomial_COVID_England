@@ -34,7 +34,7 @@ sitrep<-sitrep[include,]
 # "ALDER HEY CHILDREN'S NHS FOUNDATION TRUST" 
 # “SHEFFIELD CHILDREN'S NHS FOUNDATION TRUST" 
 
-require(lubridate)                                                           
+#require(lubridate)                                                           
 sitrep<-as.data.frame(sitrep)
 
 days_since_Jan12020<-as.integer(sitrep$date - date("2020-01-01"))

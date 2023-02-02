@@ -1,5 +1,5 @@
 # Covid ODE hospital model
-library(deSolve)
+#library(deSolve)
 
 HospCovid <- function(t, x, parms) { 
 

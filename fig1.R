@@ -54,7 +54,7 @@ polygon(c(1:maxday, maxday:1),c(sensitivity.q[1,], rev( sensitivity.q[3,])),col=
 lines(1:maxday,sensitivity.q[2,], )
 
 # Panel C: Length of stay distribution 
-library(readxl)
+#library(readxl)
 #  LoS data
 
 # conservatively use los data for those who were not positive on admission, regardless of whether they became positive

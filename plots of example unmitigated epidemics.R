@@ -3,12 +3,12 @@
 
 source("covid ode hospital model unmitigated.R")
 # above creates out.df and does some base R graphics plots
-require(gtable)
-require(ggplot2)
-require(gridExtra)
-require(bayesplot)
-require(hrbrthemes)
-require(viridis)
+# require(gtable)
+# require(ggplot2)
+# require(gridExtra)
+# require(bayesplot)
+# require(hrbrthemes)
+# require(viridis)
 
 out.df$infH<- out.df$E1_H + out.df$E2_H + out.df$I1_H + out.df$I2_H #hospital acquired cases 
 out.df$infHCW<- out.df$E1_HCW + out.df$E2_HCW + out.df$I1_HCW + out.df$I2_HCW

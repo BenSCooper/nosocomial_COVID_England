@@ -22,9 +22,9 @@
 # This is column H "Beds-Open-Overnight-Web_File-Final-DE5WC.xlsx"
 # 
 
-library(readr)
-require(PostcodesioR)
-require(remotes)
+# library(readr)
+# require(PostcodesioR)
+# require(remotes)
 #remotes::install_github("garretrc/ggvoronoi", dependencies = TRUE, build_opts = c("--no-resave-data"))
 # ggvoronoi  can be installed from github as above
 
@@ -78,7 +78,7 @@ single.rooms.by.trust<- tapply(ERIC_data$single_room_total, ERIC_data[,1], sum)
 volume.by.trust<- tapply(ERIC_data$`Site heated volume (m³)`, ERIC_data[,1], sum)
 
 # now read in general and acute beds by trust, and divide by this and standardize
-library(readxl)
+# library(readxl)
 OccupiedBedsbyTrust <- as.data.frame(read_excel("GeneralAcuteOccupiedBedsbyTrust.xlsx", 
                                                 col_types = c("text", "text", "text", 
                                                               "text", "text", "numeric", "numeric", 
@@ -194,22 +194,22 @@ names(newtrustdata2)[latpos]<-"y"
 
 
 # start with voronoi tesselation (can use geogrid to create a hexagon grid from this later)
-require(ggplot2)
-require(ggvoronoi)
-require(rgdal)
-require(maps)
-require(tidyverse)
-require(rgeos)
-require(maptools)
-require(sp)
-require(gtable)
-require(gridExtra)
-require(inlmisc)
-require(geogrid)
-require(sf)
-require(tmap)
-require(broom)
-require(cartogram)
+# require(ggplot2)
+# require(ggvoronoi)
+# require(rgdal)
+# require(maps)
+# require(tidyverse)
+# require(rgeos)
+# require(maptools)
+# require(sp)
+# require(gtable)
+# require(gridExtra)
+# require(inlmisc)
+# require(geogrid)
+# require(sf)
+# require(tmap)
+# require(broom)
+# require(cartogram)
 
 
 

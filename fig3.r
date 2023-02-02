@@ -2,12 +2,12 @@
 # To ensure this either run models using "run regression models.r" or load saved model from RDS file
 #  layout(matrix(c(1,2,3,4,4,4), 2,3,byrow=T) )
 
-require(gtable)
-require(ggplot2)
-require(gridExtra)
-require(bayesplot)
-require(hrbrthemes)
-require(viridis)
+# require(gtable)
+# require(ggplot2)
+# require(gridExtra)
+# require(bayesplot)
+# require(hrbrthemes)
+# require(viridis)
 
 
 # for panel plot

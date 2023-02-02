@@ -4,13 +4,13 @@
 # start lockdown is Iprimed_C is above 1000, and stop it if is below 10
 
 ### set up parameters and ICs 
-library(lhs)
-library(dplyr)
-library(ggplot2)
-library(cowplot)
-library(hrbrthemes)
-library(viridis)
-library(gridExtra)
+# library(lhs)
+# library(dplyr)
+# library(ggplot2)
+# library(cowplot)
+# library(hrbrthemes)
+# library(viridis)
+# library(gridExtra)
 
 # beta_HH is transmission parameter for transmission from infectious hospital patient to susceptible hospital infection
 # mu is hospital death and discharge rate  for hospitalised (not for COVID). In general will be time varying.
@@ -193,7 +193,7 @@ colnames(new_param_sets) = names(parameters0)
 
 #################################################################################################################
 
-library(deSolve)
+#library(deSolve)
 
 rootfun <- function (t, x, parms) {
   with(as.list(c(parms, x)), {

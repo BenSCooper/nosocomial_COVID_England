@@ -218,7 +218,7 @@ for(i in 1:length(trusts)){
 # 
 # Then do corresponding models for HCW infections. 
 
-require("rstan")
+#require("rstan")
 
 # Model 1 : P1_ha1
 
@@ -908,8 +908,8 @@ summary(modelCA3.ha2 ,pars=c("ca_coeff","ha_coeff","hcw_coeff","sr0", "occ0","si
 # 
 # Additional sensitivity analysis using a model with time varying intercepts
 
-require("splines")
-require("rstan")
+#require("splines")
+#require("rstan")
 spline_degree <- 3
 W<-sitrep_noso_covid_data4$W
 week<- 1:W
@@ -958,12 +958,12 @@ saveRDS(modelP3.ha2.tv1,"modelP3.ha2.tv1")
 
 #  Now plot spline function 
 
-require(gtable)
-require(ggplot2)
-require(gridExtra)
-require(bayesplot)
-require(hrbrthemes)
-require(viridis)
+# require(gtable)
+# require(ggplot2)
+# require(gridExtra)
+# require(bayesplot)
+# require(hrbrthemes)
+# require(viridis)
 
 pos<-match(c("spline_component[1]"), names(modelP3.ha2.tv1))
 

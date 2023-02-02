@@ -21,7 +21,7 @@
 # Standardize this variable. 
 # This is named (newtrustdata$proportion_single_rooms_std)
 
-library(readr)
+#library(readr)
 
 #  Merge in ERIC data to the weekly sitrep data
 
@@ -46,7 +46,6 @@ library(readr)
 # Standardize this variable. 
 # This is named (newtrustdata$proportion_single_rooms_std)
 
-library(readr)
 
 # i) read in data  filter to include only rows where the site type is labelled as a hospital
 
@@ -98,7 +97,7 @@ single.rooms.by.trust<- tapply(ERIC_data$single_room_total, ERIC_data[,1], sum)
 volume.by.trust<- tapply(ERIC_data$`Site heated volume (m³)`, ERIC_data[,1], sum)
 
 # now read in general and acute beds by trust, and divide by this and standardize
-library(readxl)
+# library(readxl)
 OccupiedBedsbyTrust <- as.data.frame(read_excel("GeneralAcuteOccupiedBedsbyTrust.xlsx", 
                                                 col_types = c("text", "text", "text", 
                                                               "text", "text", "numeric", "numeric", 

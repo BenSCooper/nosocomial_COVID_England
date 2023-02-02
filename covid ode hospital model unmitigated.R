@@ -1,5 +1,5 @@
 # Covid ODE hospital model without mitigation
-library(deSolve)
+# library(deSolve)
 
 HospCovid <- function(t, x, parms) { 
   

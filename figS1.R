@@ -1,5 +1,6 @@
 
-library(tidyverse); library(GGally)
+# library(tidyverse)
+# library(GGally)
 
 #  var_DF2.RDS is created by fig2.R and holds cumulative infections etc
 df_import <- readRDS("var_df2.RDS") 
