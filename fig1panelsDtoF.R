@@ -13,7 +13,7 @@ if(repeat_sampling){  #  repeat_sampling is a flag set in the calling file, fig1
   
   
   
-  num.iterations<-100
+  num.iterations<-1000
   maxlos<- 100
   prob.a.matrix<-matrix(NA, nrow= num.iterations, ncol = maxlos)
   prob.b.matrix<-matrix(NA, nrow= num.iterations, ncol = maxlos)
@@ -110,7 +110,7 @@ if(repeat_sampling){  #  repeat_sampling is a flag set in the calling file, fig1
   prob.ever.detected$order[prob.ever.detected$scenario=="f"] <-7
   prob.ever.detected$order[prob.ever.detected$scenario=="g"] <-8
   
-} # end
+} # end if(repeat_sampling)
 
 # Violin plots
 # First plot the overall probabilty of detecting hospital-acquired cases 
