@@ -3,11 +3,11 @@
 # layout(matrix(c(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,4,4,5,5,5,6,6,6,rep(7,6),rep(8,6)), 3,12,byrow=T) )
 layout(matrix(c(1,1,1,1,2,2,2,2,3,3,3,3,4,4,4,4,4,4,5,5,5,6,6,6,rep(7,12)), 3,12,byrow=T) )
 
-# Panel A: incubation period - plots probability of symptom onset on a given day since infection event
+# Panel A: incubation period - plots probabiity of symptom onset on a given day since infection event
 # conditional on a patient being symptomatic
 
-  # Baseline estimates are from Lauer 2020 which gives parameters and associated 95% CIs for common distributions
-# Baseline assumption is log-normal with parameters 1.621 (1.504–1.755) 0.418 (0.271–0.542) 
+# Baseline estimates are from Lauer 2020 which gives parameters and associated 95% CIs for common distributions
+# Baseline assumption is a log-normal parameters 1.621 (1.504–1.755) 0.418 (0.271–0.542) 
 
 par(mar=c(5,4,1,1),cex=.8)
 # Baseline Log-normal parameters 1.621 (1.504–1.755) 0.418 (0.271–0.542) 
@@ -31,15 +31,16 @@ for(i in 1:num.iterations){
   incperiod.samples[i,] <- prob.inc.period.is.x.days
 }
 inc.period.q<-apply(incperiod.samples,MARGIN = 2,FUN = quantile,c(0.025,.5,.975) )
+inc.period.m<-apply(incperiod.samples,MARGIN = 2,FUN =mean)
 plot(1:maxday,inc.period.q[2,] , xlab="Day since infection" ,ylab="Probability symptom onset",type='l', ylim=c(0,0.3),bty='n')
 polygon(c(1:maxday, maxday:1),c(inc.period.q[1,], rev( inc.period.q[3,])),col="grey" , border=NA)
-lines(1:maxday,inc.period.q[2,], )
+lines(1:maxday,inc.period.m)
 
 # Panel B: PCR sensitivity as a function of days since infection
 
-  sens_post<-readRDS("Hellewell_fig3bdata.RDS")
+sens_post<-readRDS("Hellewell_fig3bdata.RDS")
 
-# Hellewell_fig3bdata.RDS holds posterior of PCR sensitivity as function of time since infection
+# Hellewell_fig3bdata.RDS holds posterior of PRC sensitivity as function of time since infection
 # There are 10 time points per day and 30 days in total, so including time 0 there are 301 columns
 # This is plotted in Fig 3B of the paper https://bmcmedicine.biomedcentral.com/articles/10.1186/s12916-021-01982-x
 # Code to produce this is here https://github.com/cmmid/pcr-profile 
@@ -49,20 +50,34 @@ day<-rep(1:30, each=10)
 daymean<-function(x){ tapply(x, day, mean)}
 sens_post_daily<-t(apply(sens_post, 1, daymean))
 sensitivity.q<-apply(sens_post_daily,MARGIN = 2,FUN = quantile,c(0.025,.5,.975) )
+sensitivity.mean<-apply(sens_post_daily,MARGIN = 2,FUN = mean )
+
 plot(1:maxday,sensitivity.q[2,] , xlab="Day since infection" ,ylab="PCR sensitivity",type='l', ylim=c(0,1.0),bty='n')
 polygon(c(1:maxday, maxday:1),c(sensitivity.q[1,], rev( sensitivity.q[3,])),col="grey" , border=NA)
-lines(1:maxday,sensitivity.q[2,], )
+lines(1:maxday,sensitivity.mean)
 
 # Panel C: Length of stay distribution 
-#library(readxl)
+library(readxl)
 #  LoS data
+# Use SUS data from Neg_byProvWeekLos.xlsx - and filter by providers with more than  1000 patient episodes
+# (need to clarify from James exactly what Neg_byProvWeekLos.xlsx holds and see if we can get more recent data  but I think it is LoS data
+# for completed patient episodes for patients who were not known to have covid-19)
+Neg_byProvWeekLos <- as.data.frame(read_excel("Neg_byProvWeekLos.xlsx"))
+provider_totals<-tapply(Neg_byProvWeekLos$n,Neg_byProvWeekLos$Procode,"sum") #  this shows number of episodes per provider
 
-# conservatively use los data for those who were not positive on admission, regardless of whether they became positive
-los_data <- readRDS("LoS_by_Trust.rds")
+#  initially we restrict the analysis to providers that have at least 10,000 episodes
+hospitals_to_include<- names(provider_totals)[provider_totals>=10000]
+episodes_by_provider<-provider_totals[names(provider_totals) %in% hospitals_to_include]
+# los_data<-Neg_byProvWeekLos[Neg_byProvWeekLos$Procode %in% hospitals_to_include, ]
+#  above was LoS for patients who were never SARS-CoV-2 pos while in hospital
+# however this will select for shorter LoS and will underestimate detection probability
+# below we now conservatively use los data for those who were not positive on admission, regardless of whether they became positive
+los_data <- readRDS("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/final_analysis/los data/LoS_by_Trust.rds")
+los_data<-as.data.frame(LoS_by_Trust)
 
 # los_data holds frequency of lengths of stays of 0,1,2,3,....days for each provider with >10,000 completed episodes over the period
 # by trust and (provider) code and week. 
-# Aggregate this across weeks and trusts to calculate probabilities of different los 
+# Initially, just aggregate this across weeks and trusts to calculate probabilities of different los 
 # agg_los_dist<-tapply(los_data$n, los_data$los.days, "sum")
 agg_los_dist<-tapply(los_data$count, los_data$LoS, "sum")
 # exclude episodes with a los of 0 days and normalise
@@ -75,7 +90,8 @@ agg_los_dist<-agg_los_dist/sum(agg_los_dist)
 agg_los_dist<-agg_los_dist[1:100]/sum(agg_los_dist[1:100])
 barlabels<-rep("",30)
 barlabels[c(1,10,20)] =as.character(c(1,10,20))
-barplot(agg_los_dist[1:30],names.arg = barlabels, ylab= "Frequency",xlab="Days",xaxt='none')
+#barplot(agg_los_dist[1:30],names.arg = barlabels, ylab= "Frequency",xlab="Days",xaxt='none')
+plot(1:30, agg_los_dist[1:30], pch=1, xlab="Days", ylab="Frequency", main="", bty='n',xaxt='n')
 abline(v=14,col="grey")  # patients must stay at least this long to be at risk of a "definite" nosocomial infection
 abline(v=7,lty=2,col="grey")  # patients must stay at least this long to be at risk of a "probable" nosocomial infection
 axis(side=1,at=c(1,5,10,15,20,25,30))
@@ -88,14 +104,13 @@ axis(side=1,at=c(1,5,10,15,20,25,30))
 # Call another file to do this
 repeat_sampling<-TRUE  # set to TRUE if want to repeat sampling for these panels 
 
-source("fig1panelsDtoF.R") 
-
+source("fig1panelsDtoF.R")
 
 # Now add time series plots of numbers
 
 # read in  sitrep data (which contains only Acute Trusts)
-sitrep_time_series <- readRDS("sitreps_eng_expanded.rds")
-# exclude children's hospitals (Great Ormond Street Hospital for Children NHS Foundation Trust., Alder Hey Children's NHS Foundation Trust. Sheffield Children's NHS Foundation Trust)
+sitrep_time_series <- readRDS("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/March2021/sitreps_eng_expanded.rds")
+
 include<-!(sitrep_time_series$org_code %in% c("RP4" , "RBS", "RCU"))
 sitrep_time_series<-sitrep_time_series[include,]
 sitreporgcodes147<-unique(sitrep_time_series$org_code)
@@ -104,29 +119,38 @@ nosocomial8to14day.def<-sitrep_time_series$n_inpatients_diagnosed_8_14
 nosocomial3to7day.def<-sitrep_time_series$n_inpatients_diagnosed_3_7
 nosocomial0to2day.def<-sitrep_time_series$n_inpatients_diagnosed_0_2
 
+
+
 days.since.31.12.19<-as.integer(sitrep_time_series$date-as.Date("2019-12-31"))
 
 wk.no<-1+(days.since.31.12.19 %/% 7)
 
+
 # now sum cases by week
 # first create a week variable 
+
 nosocomial15day.dailytotals<-tapply(nosocomial15day.def,wk.no, FUN = "sum",na.rm=T)
 nosocomial8to14day.dailytotals<-tapply(nosocomial8to14day.def,wk.no, FUN = "sum",na.rm=T)
 nosocomial3to7day.dailytotals<-tapply(nosocomial3to7day.def,wk.no, FUN = "sum",na.rm=T)
 nosocomial0to2day.dailytotals<-tapply(nosocomial0to2day.def,wk.no, FUN = "sum",na.rm=T)
 
-# We have two sources of uncertainty
-# i)  uncertainty in the probability of nosocomial infections meeting the 14 day detection cutoff
+
+# For doing this we have two sourses of uncertainty
+# i) uncertainty in the probability of nosocomial infections meeting the 14 day detection cutoff
 # ii) binomial uncertainty in the number trials given known probability and number of outcomes
+#  
+# 
 
 estimated.total.nosocomial.scaling<-mean(1/prob.detected.from.day15.d[,2])
 estimated.total.nosocomial<-estimated.total.nosocomial.scaling*nosocomial15day.dailytotals
 sum(estimated.total.nosocomial,na.rm=T) # estimated total nosocomial
 
+
+
 newsims<-TRUE
 
 if(newsims){
-  numsims<-100 # i.e number of sample probabilities of detection (which depend on uncertainty in inc period, pcr sensitivity, proportion symptomatic)
+  numsims<-100 # i..e number of sample probabilities of detection (which depend on uncertainty in inc period, pcr sensitivity, proportion symptomatic)
   numdawsfromposteriorpersim<-100
   numsamples<-numsims*numdawsfromposteriorpersim
   maxcases<-20000 #  the maximum conceivable weekly number of nosocomial infections
@@ -140,13 +164,12 @@ if(newsims){
     for(j in 1:length(estimated.total.nosocomial)){
       x<-nosocomial15day.dailytotals[j]
       if(!is.na(x)){
-        # then calculate posterior distribution of total cases (with a uniform prior on 0, maxcases) 
-        post<-binom.ntrial.pos(x,p,rep(1,(1+maxcases)))
-        post.oxf<-binom.ntrial.pos(x,p.oxf,rep(1,(1+maxcases)))
+        # then calculate posterior distribution of total cases (with a uniform prior on 1, maxcases) 
+        post<-binom.ntrial.pos(x,p,rep(1,maxcases))
+        post.oxf<-binom.ntrial.pos(x,p.oxf,rep(1,maxcases))
         
-        samp.tot<-sample(0:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post)
-        samp.tot.oxf<-sample(0:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post.oxf)
-        
+        samp.tot<-sample(1:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post)
+        samp.tot.oxf<-sample(1:maxcases,numdawsfromposteriorpersim,replace=TRUE, prob=post.oxf)
         col.range<-(i-1)*numdawsfromposteriorpersim + (1:numdawsfromposteriorpersim)
         estimated.total.nosocomial.m[col.range, j]<-samp.tot
         estimated.total.nosocomial.m.oxf[col.range, j]<-samp.tot.oxf
@@ -158,6 +181,8 @@ if(newsims){
   est.tot.1<-apply(estimated.total.nosocomial.m,MARGIN = 1, sum)
   quantile(est.tot.1, c(0.05,.5,.95))
   mean(est.tot.1)
+  
+  
   
   # total estimated with oxford  sampling based on post 14 days onset cases
   est.tot.2<-apply(estimated.total.nosocomial.m.oxf,MARGIN = 1, sum)
@@ -192,6 +217,20 @@ lines(wks,estimated.total.nosocomial.mean.oxf[sel], lty=1,col="lightblue")
 
 # Add a line for "definite" nosocomial data (the data we are basing inferences on)
 lines(wks,nosocomial15day.dailytotals[sel],col="red3",lwd=2)
+# Add a dashed line "probable nosocomial infection 
+# lines(wks,nosocomial8to14day.dailytotals,col="red3",lty=2)
+# Add a dotted line "indeterminate"
+#lines(wks,nosocomial3to7day.dailytotals,col="red3",lty=3)
+
+
+# polygon(c(wks, rev(wks)),c(estimated.day8to14.nosocomial.intervals[1,], rev(estimated.day8to14.nosocomial.intervals[3,])),col="pink" , border=NA)
+
+#legend("topleft", legend=c("Estimated total nosocomial infections", "Observed infections with onset after day 14", "Observed infections with day 8-14 onset","Observed infections with day 3-7 onset","Predicted nosocomial infections with 8 to 14 day onset"), lty=c(1,1,2,3,1),col=c("black","red3","red3","red3","pink"),lwd=c(1,1,1,1,2),bty='n')
+legend("topleft", legend=c("Estimated hospital-acquired infections \n (day 3 & 6 screening)","Estimated hospital-acquired infections \n (day 3,7,14... screening)", "Detected infections, post day 14 onset"), lty=c(1,1,1),col=c("seagreen","blue","red3"),lwd=c(2,2,2),seg.len=0.5,bty='n')
+#legend(25,1500, legend=c("Estimated hospital-acquired infections (day3 & 6 screening)","Estimated hospital-acquired  infections (day 3,7,14... screening)", "Detected infections, post day 14"), lty=c(1,1,1),col=c("seagreen","blue","red3"),lwd=c(2,2,2),seg.len=0.5,bty='n')
+
+#  Estimated numbers based on those with onset from day 8 onwards
+
 
 nsamples<-dim(estimated.total.nosocomial.m)[1]
 prob.detected.from.day8.i <-prob.detected.from.day8.i[ ,2]
@@ -215,6 +254,7 @@ for(i in 1:length(p)){
       col.range<-(i-1)*numdawsfromposteriorpersim + (1:numdawsfromposteriorpersim)
       estimated.total.nosocomial.m[col.range, j]<-samp.tot
       estimated.total.nosocomial.m.oxf[col.range, j]<-samp.tot.oxf
+      
     }
   }
 }
@@ -227,6 +267,7 @@ mean(est.tot.1b)
 est.tot.2b<-apply(estimated.total.nosocomial.m.oxf,MARGIN = 1, sum)
 quantile(est.tot.2b, c(0.05,.5,.95))
 mean(est.tot.2b)
+
 
 estimated.total.nosocomial.mean<-apply(estimated.total.nosocomial.m,MARGIN = 2,FUN = mean, na.rm=TRUE)
 estimated.total.nosocomial.intervals<-apply(estimated.total.nosocomial.m,MARGIN = 2,FUN = quantile, c(.05,0.5,0.95), na.rm=TRUE) # 90% credible intervals
