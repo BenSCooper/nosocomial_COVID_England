@@ -72,7 +72,7 @@ episodes_by_provider<-provider_totals[names(provider_totals) %in% hospitals_to_i
 #  above was LoS for patients who were never SARS-CoV-2 pos while in hospital
 # however this will select for shorter LoS and will underestimate detection probability
 # below we now conservatively use los data for those who were not positive on admission, regardless of whether they became positive
-los_data <- readRDS("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/final_analysis/los data/LoS_by_Trust.rds")
+LoS_by_Trust <- readRDS("LoS_by_Trust.rds")
 los_data<-as.data.frame(LoS_by_Trust)
 
 # los_data holds frequency of lengths of stays of 0,1,2,3,....days for each provider with >10,000 completed episodes over the period
@@ -109,7 +109,7 @@ source("fig1panelsDtoF.R")
 # Now add time series plots of numbers
 
 # read in  sitrep data (which contains only Acute Trusts)
-sitrep_time_series <- readRDS("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/March2021/sitreps_eng_expanded.rds")
+sitrep_time_series <- readRDS("sitreps_eng_expanded.rds")
 
 include<-!(sitrep_time_series$org_code %in% c("RP4" , "RBS", "RCU"))
 sitrep_time_series<-sitrep_time_series[include,]

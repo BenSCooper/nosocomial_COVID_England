@@ -68,7 +68,7 @@ calc_prob_infected_by_day_of_stay_given_infected2<-function(los=20, proportionof
 }
 
 # Now explore approximation of constant conditional probability of infection with actual Length of stay distribution
-los_data <- readRDS("~/Dropbox/studies/covid19/nosocomial transmission stuff/sitrep/final_analysis/los data/LoS_by_Trust.rds")
+los_data <- readRDS("LoS_by_Trust.rds")
 los_data<-as.data.frame(LoS_by_Trust)
 # los_data holds frequency of lengths of stays of 0,1,2,3,....days for each provider with >10,000 completed episodes over the period
 # by trust and (provider) code and week. 
